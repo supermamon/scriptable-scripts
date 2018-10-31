@@ -15,7 +15,9 @@ Changes :
       folder manually is no longer needed
     v1.0.0 | 2018-09-29
     - Initial release     
-
+Requires:
+    Backup & Restore Shortcut 
+    - https://routinehub.co/shortcut/613
 Parameters
 * restore_dir : the folder inside the Shortcuts
     folder where the backups are stored
