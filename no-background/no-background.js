@@ -6,16 +6,18 @@
 
 Script      : no-background.js
 Author      : me@supermamon.com
-Version     : 1.0.1
+Version     : 1.0.2
 Description :
-  A module to create illussions of transparent
-  background for Scriptable widgets
+  A module to create illusions of transparent
+  backgrounds for Scriptable widgets
 
 Adapted from Max Zeryck's (@mzeryck) amazing 
 invisible widget shared on the Automtors discourse
 https://talk.automators.fm/t/widget-examples/7994/135
 
 Changelog   :
+v1.0.2
+- Typos on the documentation
 v1.0.1
 - Fix iamge does not exists issue
 ----------------------------------------------- */
