@@ -6,7 +6,7 @@
 
 Script      : no-background.js
 Author      : me@supermamon.com
-Version     : 1.0.0
+Version     : 1.0.1
 Description :
   A module to create illussions of transparent
   background for Scriptable widgets
@@ -15,7 +15,9 @@ Adapted from Max Zeryck's (@mzeryck) amazing
 invisible widget shared on the Automtors discourse
 https://talk.automators.fm/t/widget-examples/7994/135
 
-
+Changelog   :
+v1.0.1
+- Fix iamge does not exists issue
 ----------------------------------------------- */
 
 //set true to use local file system
@@ -117,7 +119,8 @@ exports.getSlice = async function(name) {
   let appearance = (await isUsingDarkAppearance()) ? 'dark' : 'light'
 
   let position = name
-  const imgPath = fm.joinPath(cachePath, `${position}.jpg`)
+  const imgPath = fm.joinPath(cachePath, `${appearance}-${position}.jpg`)
+  log(imgPath)
   if (!fm.fileExists(imgPath)) {
     log('image does not exists')
     return null
@@ -131,7 +134,8 @@ exports.getSlice = async function(name) {
   return image
 }
 //------------------------------------------------
-exports.getPathForSlice = function(slice_name) {
+exports.getPathForSlice = async function(slice_name) {
+  let appearance = (await isUsingDarkAppearance()) ? 'dark' : 'light'
   return fm.joinPath(cachePath, 
     `${appearance}-${slice_name}.jpg`)
 }
