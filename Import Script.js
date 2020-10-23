@@ -5,7 +5,7 @@
 /* -----------------------------------------------
 Script      : Import Script.js
 Author      : me@supermamon.com
-Version     : 1.1.0
+Version     : 1.1.1
 Description :
   A script to download and import files into the
   Scriptable folder. Includes a mini repo file 
@@ -18,6 +18,7 @@ Supported Sites
 * raw code from the clipboard
 
 Changelog:
+v1.1.1 - fix gist error introduced in v1.1
 v1.1.0 - support for gists with multiple files
 v1.0.0 - Initial releast
 ----------------------------------------------- */
@@ -299,10 +300,11 @@ async function pickFileFromGist(gistId) {
   }
 
   let filenames = Object.keys(gist.files)
-
+  log(filenames)
   // don't show browser if just one file
   if (filenames.length == 1) {
-    let file = gist.files[0]
+    let file = gist.files[filenames[0]]
+    log(file)
     return {
       source: 'gist',
       name: file.filename,
