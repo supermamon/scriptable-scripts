@@ -5,7 +5,7 @@
 /* -----------------------------------------------
 Script      : Import Script.js
 Author      : me@supermamon.com
-Version     : 1.0.0
+Version     : 1.1.0
 Description :
   A script to download and import files into the
   Scriptable folder. Includes a mini repo file 
@@ -16,6 +16,10 @@ Supported Sites
 * gist.github.com
 * pastebin.com
 * raw code from the clipboard
+
+Changelog:
+v1.1.0 - support for gists with multiple files
+v1.0.0 - Initial releast
 ----------------------------------------------- */
 let url;
 let data;
@@ -74,7 +78,7 @@ switch (urlType.name) {
   case 'gh-gist': 
     var slices = input.match(urlType.regex)
     log(slices)
-    data = await getGistFileDetails(slices[3])
+    data = await pickFileFromGist(slices[3])
     break;
   case 'gh-gist-raw': 
     var slices = input.match(urlType.regex)
@@ -282,26 +286,68 @@ async function getRepoFileDetails(repoUrl, path) {
 
 }
 //------------------------------------------------
-async function getGistFileDetails(gistId) {
+async function pickFileFromGist(gistId) {
   let apiUrl = `https://api.github.com/gists/${gistId}`  
   log(apiUrl)
   const req = new Request(apiUrl)
 
   try {
-    var resp = await req.loadJSON()
+    var gist = await req.loadJSON()
   } catch(e) {
     await presentAlert("Unable to fetch repo information. Likely due to api limits", ["OK"])
     return null
   }
 
-  const filename = Object.keys(resp.files)[0]
-  const file = resp.files[filename]
-  const data = {
-    source: 'gist',
-    name: filename,
-    download_url: file.raw_url
+  let filenames = Object.keys(gist.files)
+
+  // don't show browser if just one file
+  if (filenames.length == 1) {
+    let file = gist.files[0]
+    return {
+      source: 'gist',
+      name: file.filename,
+      download_url: file.raw_url
+    }    
   }
-  return data
+
+  let selected;
+
+  let table = new UITable()
+  filenames = filenames.sort()
+  filenames.forEach( filename => {
+    const row = new UITableRow()
+
+    let sfIcon = SFSymbol.named(`doc.circle`)
+    sfIcon.applyFont(Font.systemFont(25))
+    let img = sfIcon.image
+    let iconCell = row.addImage(img)
+    iconCell.widthWeight = 10
+    iconCell.centerAligned()
+
+    let nameCell = row.addText(filename)
+    nameCell.widthWeight = 90
+
+    row.onSelect = (index) => {
+      selected = filenames[index]
+    }
+
+    table.addRow(row)
+  })
+
+  await table.present()
+
+  if (!selected) return null  
+
+  if (selected) {
+    let file = gist.files[selected]
+    return {
+      source: 'gist',
+      name: file.filename,
+      download_url: file.raw_url
+    }
+  } 
+
+
 }
 //------------------------------------------------
 async function importScript(data) {
