@@ -16,6 +16,8 @@ invisible widget shared on the Automtors discourse
 https://talk.automators.fm/t/widget-examples/7994/135
 
 Changelog   :
+v1.1.0
+- Support for iPhone 12 & 12 Pro
 v1.0.2
 - Typos on the documentation
 v1.0.1
@@ -238,6 +240,18 @@ const widgetPositions = {
 }
 //------------------------------------------------
 const phoneSizes =  {
+  "2352": {
+    "models"  : ["12", "12 Pro"],
+    "small"   : {"w": 474, "h": 474 },
+    "medium"  : {"w": 1014, "h": 474 },
+    "large"   : {"w": 1014, "h": 1062 },
+    "left"    : 78,
+    "right"   : 618,
+    "top"     : 231,
+    "middle"  : 819,
+    "bottom"  : 1407
+  },
+   
   "2688": {
     "models"  : ["Xs Max", "11 Pro Max"],
     "small"   : {"w": 507,  "h": 507},
