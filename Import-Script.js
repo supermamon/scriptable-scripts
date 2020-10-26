@@ -3,9 +3,9 @@
 // icon-color: blue; icon-glyph: download; share-sheet-inputs: plain-text, url;
 
 /* -----------------------------------------------
-Script      : Import Script.js
+Script      : Import-Script.js
 Author      : me@supermamon.com
-Version     : 1.1.1
+Version     : 1.2.0
 Description :
   A script to download and import files into the
   Scriptable folder. Includes a mini repo file 
@@ -18,6 +18,9 @@ Supported Sites
 * raw code from the clipboard
 
 Changelog:
+v1.2.0 - (update)renamed to Import-Script.js
+       - (fix) script names with spaces are saved 
+         with URL Encoding
 v1.1.1 - fix gist error introduced in v1.1
 v1.1.0 - support for gists with multiple files
 v1.0.0 - Initial releast
@@ -72,7 +75,7 @@ switch (urlType.name) {
     log(slices)
     data = {
       source: 'repo',
-      name: `${slices[2]}`,
+      name: decodeURIComponent(`${slices[2]}`),
       download_url: input
     }
     break;
@@ -86,7 +89,7 @@ switch (urlType.name) {
     log(slices)
     data = {
       source: 'gist',
-      name: `${slices[1]}`,
+      name: `${decodeURIComponent(slices[1])}`,
       download_url: input
     }
     break;
