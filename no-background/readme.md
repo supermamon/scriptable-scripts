@@ -2,13 +2,22 @@
 
 A module to create illusions of transparent backgrounds for Scriptable widgets.
 
-### How to Use
+**Features**
+* Interactive Configuration
+* Dark and Light mode support
+* Methods to get the actual background image or the image path
+* Store widget positions
 
-*Setup*
+--- 
+
+## How to Use
+
+### Initial Setup
 
 Download both [no-background.js](no-background.js) & [No Background Config.js](No%20Background%20Config.js). Then run the `No Background Config` script. This should guide you on how to create the slices that can be used for your widgets.
 
-*Your Widget*
+
+### Widget Code
 
 There are different ways to get the wallpaper slice that you need to set for your widget background.
 
@@ -43,14 +52,20 @@ widget.backgroundImage = Image.fromFile(bgpath)
 const widgetID = "mywidget"
 const nobg = importModule('no-background.js')
 
-// store the widget position by calling this statement
+// interactively store the widget position by 
+// calling this statement
 // await nobg.chooseBackgroundSlice(widgetID)
 
 const widget = new ListWidget();
 widget.backgroundImage = await nobg.getSliceForWidget(widgetID)
 ```
 
-I've created a template on how to actually use the third method where the background can be configured without changing the code.
+## Examples
 
-* [Widget Template](no-bg-widget-template.js)
+* [nobg-small-top-left-widget.js](examples/nobg-small-top-left-widget.js) - a very basic example for a widget on a fixed position
+* [nobg-configurable-widget-template.js](examples/nobg-configurable-widget-template.js) - example widget where the possition can be set at run-time
+* [weather-widget-414.js](examples/weather-widget-414.js) - weather example based off the [code by @eqsOne](https://talk.automators.fm/t/widget-examples/7994/414)
 
+## Preview
+
+![](preview.png)
