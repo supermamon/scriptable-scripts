@@ -6,7 +6,7 @@
 
 Script      : no-background.js
 Author      : me@supermamon.com
-Version     : 1.0.2
+Version     : 1.1.1
 Description :
   A module to create illusions of transparent
   backgrounds for Scriptable widgets
@@ -16,6 +16,9 @@ invisible widget shared on the Automtors discourse
 https://talk.automators.fm/t/widget-examples/7994/135
 
 Changelog   :
+v1.1.1
+- (fix) syntax error on generateSlices
+- (fix) incorrect iPhone 12 size
 v1.1.0
 - Support for iPhone 12 & 12 Pro
 v1.0.2
@@ -61,7 +64,7 @@ exports.generateSlices = async function() {
   let phone = phoneSizes[height]
   if (!phone) {
     message = "It looks like you selected an image that isn't an iPhone screenshot, or your iPhone is not supported. Try again with a different image."
-    await presentAlert(message,["OK"].ALERTS_AS_SHEETS)
+    await presentAlert(message,["OK"],ALERTS_AS_SHEETS)
     return false
   }
 
@@ -240,7 +243,7 @@ const widgetPositions = {
 }
 //------------------------------------------------
 const phoneSizes =  {
-  "2352": {
+  "2532": {
     "models"  : ["12", "12 Pro"],
     "small"   : {"w": 474, "h": 474 },
     "medium"  : {"w": 1014, "h": 474 },
