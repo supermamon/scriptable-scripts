@@ -5,7 +5,7 @@
 /* -----------------------------------------------
 Script      : Import-Script.js
 Author      : me@supermamon.com
-Version     : 1.2.0
+Version     : 1.3.0
 Description :
   A script to download and import files into the
   Scriptable folder. Includes a mini repo file 
@@ -15,9 +15,11 @@ Supported Sites
 * github.com
 * gist.github.com
 * pastebin.com
+* hastebin.com
 * raw code from the clipboard
 
 Changelog:
+v1.3.0 - (new) hastebin.com support
 v1.2.0 - (update)renamed to Import-Script.js
        - (fix) script names with spaces are saved 
          with URL Encoding
@@ -62,9 +64,7 @@ switch (urlType.name) {
     break;
   case 'gh-repo-folder':
     var slices = input.match(urlType.regex)
-    log(slices.join("\n"))
     data = await pickFileFromRepo(slices[1], slices[3].replace(/^\//,''))
-    log(data)
     break;
   case 'gh-repo-file': 
     var slices = input.match(urlType.regex)
@@ -72,7 +72,6 @@ switch (urlType.name) {
     break;
   case 'gh-repo-raw': 
     var slices = input.match(urlType.regex)
-    log(slices)
     data = {
       source: 'repo',
       name: decodeURIComponent(`${slices[2]}`),
@@ -81,22 +80,18 @@ switch (urlType.name) {
     break;
   case 'gh-gist': 
     var slices = input.match(urlType.regex)
-    log(slices)
     data = await pickFileFromGist(slices[3])
     break;
   case 'gh-gist-raw': 
     var slices = input.match(urlType.regex)
-    log(slices)
     data = {
       source: 'gist',
       name: `${decodeURIComponent(slices[1])}`,
       download_url: input
     }
     break;
-
   case 'pastebin': 
     var slices = input.match(urlType.regex)
-    log(slices)
     data = {
       source: 'pastebin',
       name: `${slices[1]}.js`,
@@ -105,10 +100,25 @@ switch (urlType.name) {
     break;
   case 'pastebin-raw': 
     var slices = input.match(urlType.regex)
-    log(slices)
     data = {
       source: 'pastebin',
       name: `${slices[1]}.js`,
+      download_url: input
+    }
+    break;
+  case 'hastebin': 
+    var slices = input.match(urlType.regex)
+    data = {
+      source: 'hastebin',
+      name: `${slices[1]}`,
+      download_url: input.replace('.com','.com/raw')
+    }
+    break;
+  case 'hastebin-raw': 
+    var slices = input.match(urlType.regex)
+    data = {
+      source: 'hastebin',
+      name: `${slices[1]}`,
       download_url: input
     }
     break;
@@ -123,7 +133,6 @@ switch (urlType.name) {
 }
 
 if (data) {
-
   let importedFile = await importScript(data)
   if (importedFile) {
     await presentAlert(`Imported ${importedFile}`,["OK"])
@@ -141,7 +150,9 @@ function getUrlType(url) {
     {name: 'gh-gist',         regex: /^(https:\/\/gist\.github.com\/)([^\/]+)\/([a-z0-9]+)$/},
     {name: 'gh-gist-raw',     regex: /^https:\/\/gist\.githubusercontent\.com\/[^\/]+\/[^\/]+\/raw\/[^\/]+\/(.+)$/},
     {name: 'pastebin-raw',    regex: /^https:\/\/pastebin\.com\/raw\/([a-zA-Z\d]+)/},
-    {name: 'pastebin',        regex: /^https:\/\/pastebin\.com\/([a-zA-Z\d]+)/}
+    {name: 'pastebin',        regex: /^https:\/\/pastebin\.com\/([a-zA-Z\d]+)/},
+    {name: 'hastebin',        regex: /^https:\/\/hastebin\.com\/([a-z]+\.[a-z]+)$/},
+    {name: 'hastebin-raw',    regex: /^https:\/\/hastebin\.com\/raw\/([a-z]+\.[a-z]+)$/}
   ]
   let types = typeMatchers.filter( matcher => {
     return matcher.regex.test(url)
