@@ -13,7 +13,7 @@ Description :
   * Works only for non-private users. 
   * Also does not work for some regions like 
     Switzerland for example. Instagram prevents 
-    viewing user metadata without beiing 
+    viewing user metadata without being 
     authenticated. So, this script won't work 
     there.
 
@@ -73,7 +73,7 @@ Script.complete()
 async function createWidget(data, widgetFamily) {
   
   widgetFamily = widgetFamily || config.widgetFamily
-  const padd = widgetFamily=='large' ? 18 : 10
+  const padd = widgetFamily=='large' ? 12 : 10
   const fontSize = widgetFamily=='large' ? 14 : 10
 
   const img = await download('Image', data.display_url)
