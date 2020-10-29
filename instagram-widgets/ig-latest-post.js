@@ -5,7 +5,7 @@
 
 Script      : ig-latest-post.js
 Author      : me@supermamon.com
-Version     : 1.0.0
+Version     : 1.1.0
 Description :
   Displays the latest instagram post of a selected
   user or users.
@@ -17,6 +17,9 @@ Description :
     authenticated. So, this script won't work 
     there.
 
+Changelog:
+v1.1.0 - Options to show likes and comments count
+v1.0.0 - Initial release
 ----------------------------------------------- */
 
 // The script randomly chooses from this list of
@@ -31,15 +34,23 @@ const USERS = [
   'palmtraveller'
 ]
 
-// display the username at the bottom of the 
-// widget
+// display stuff at the bottom of the widget
 const SHOW_USERNAME = true
+const SHOW_LIKES    = true
+const SHOW_COMMENTS = false
 
-// desired interval in minuted to refresh the
+// desired interval in minutes to refresh the
 // widget. This will only tell IOS that it's
 // ready for a refresh, whether it actually 
 // refreshes is up to IOS
 const REFRESH_INTERVAL = 5 //mins
+
+
+// only show the staus line is any of the
+// status items are visible
+const SHOW_STATUS_LINE = SHOW_USERNAME || 
+                          SHOW_LIKES || 
+                          SHOW_COMMENTS
 
 // get usernames from the arguments if passed
 let usernames = args.widgetParameter || USERS.join(',')
@@ -88,22 +99,66 @@ async function createWidget(data, widgetFamily) {
   widget.setPadding(padd,padd,padd,padd)
   widget.backgroundImage = img
 
-  if (SHOW_USERNAME) {
+  if (SHOW_STATUS_LINE) {
+
+    // add gradient with a semi-transparent 
+    // dark section at the bottom. this helps
+    // with the readability of the status line
     widget.backgroundGradient = newLinearGradient(
-        ['#ffffff00','#ffffff00','#00000088'],
-        [0,.75,1])
+      ['#ffffff00','#ffffff00','#00000088'],
+      [0,.75,1])
+
+    // top spacer to push the bottome stack down
     widget.addSpacer()
-    const eu = widget.addText(`@${data.username}`)
-    eu.leftAlignText()
-    eu.url = url
-    eu.font = new Font('Helvetica',fontSize)
-    eu.shadowRadius = 3
-    eu.textColor = Color.white()
-    eu.shadowColor = Color.black()
+
+    // horizontal stack to hold the status line
+    const stats = widget.addStack()
+    stats.layoutHorizontally()
+    stats.centerAlignContent()
+    stats.spacing = 3
+
+    if (SHOW_USERNAME) {
+      const eUsr = addText(stats, `@${data.username}`,'left', fontSize)
+    }
+
+    stats.addSpacer()
+
+    if (SHOW_LIKES) {
+      const heart = addSymbol(stats, 'heart.fill', fontSize)
+      const likes = abbreviateNumber(data.likes)
+      const eLikes = addText(stats, likes, 'right', fontSize)
+    }
+
+    if (SHOW_COMMENTS) {
+      const msg = addSymbol(stats, 'message.fill', fontSize)
+      const comments = abbreviateNumber(data.comments)
+      const eComm = addText(stats, comments, 'right', fontSize)
+    }
+
   }
+
   return widget
   
 }
+//------------------------------------------------
+function addSymbol(container, name, size) {
+  const sfIcon = SFSymbol.named(name)
+  const fIcon = sfIcon.image
+  const icon = container.addImage(fIcon)
+  icon.tintColor = Color.white()
+  icon.imageSize = new Size(size,size)
+  return icon
+}
+//------------------------------------------------
+function addText(container, text, align, size) {
+  const txt = container.addText(text)
+  txt[`${align}AlignText`]()
+  txt.font = Font.systemFont(size)
+  txt.shadowRadius = 3
+  txt.textColor = Color.white()
+  txt.shadowColor = Color.black()   
+}
+
 //------------------------------------------------
 function getRandom(array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -144,6 +199,14 @@ async function getLatestPost(username) {
       message: e.message
     }
   }
+  // if there's no data
+  if (!pj.logging_page_id) {
+    return {
+      has_error: true,
+      message: 'User does not exists.'
+    }
+  }
+
   const user = pj.graphql.user
   if (user.is_private) {
     return {
@@ -151,6 +214,10 @@ async function getLatestPost(username) {
       message: `${username} is private.`
     }
   }
+  // the latest post, that's why we're using 
+  // index 0. maybe we can randomize this in 
+  // the future to allow any of the recent 
+  // number of posts
   const post = user.edge_owner_to_timeline_media.edges[0].node
   var caption = ''
   if (post.edge_media_to_caption.edges.length) {
@@ -163,7 +230,9 @@ async function getLatestPost(username) {
     shortcode: post.shortcode,
     display_url: post.display_url,
     is_video: post.is_video,
-    caption: caption
+    caption: caption,
+    comments: post.edge_media_to_comment.count,
+    likes: post.edge_liked_by.count
   }
 }
 //------------------------------------------------
@@ -179,4 +248,19 @@ async function presentAlert(prompt,items,asSheet)
     await alert.presentSheet() : 
     await alert.presentAlert()
   return resp
+}
+//------------------------------------------------
+// found on : https://stackoverflow.com/a/32638472
+// thanks @D.Deriso
+function abbreviateNumber(num, fixed) {
+  
+  if (num === null) { return null; } // terminate early
+  if (num === 0) { return '0'; } // terminate early
+  fixed = (!fixed || fixed < 0) ? 0 : fixed; // number of decimal places to show
+  var b = (num).toPrecision(2).split("e"), // get power
+      k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3), // floor at decimals, ceiling at trillions
+      c = k < 1 ? num.toFixed(0 + fixed) : (num / Math.pow(10, k * 3) ).toFixed(1 + fixed), // divide by power
+      d = c < 0 ? c : Math.abs(c), // enforce -0 is 0
+      e = d + ['', 'K', 'M', 'B', 'T'][k]; // append power
+  return e;
 }
