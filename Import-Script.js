@@ -5,7 +5,7 @@
 /* -----------------------------------------------
 Script      : Import-Script.js
 Author      : me@supermamon.com
-Version     : 1.3.0
+Version     : 1.4.0
 Description :
   A script to download and import files into the
   Scriptable folder. Includes a mini repo file 
@@ -19,6 +19,9 @@ Supported Sites
 * raw code from the clipboard
 
 Changelog:
+v1.4.0 - (new) option to use local storage instead
+         of iCloud for users who don't have 
+         iCloud enabled
 v1.3.0 - (new) hastebin.com support
 v1.2.0 - (update)renamed to Import-Script.js
        - (fix) script names with spaces are saved 
@@ -27,17 +30,22 @@ v1.1.1 - fix gist error introduced in v1.1
 v1.1.0 - support for gists with multiple files
 v1.0.0 - Initial releast
 ----------------------------------------------- */
+
+// set to false if you're not using iCloud
+const USE_ICLOUD = true
+
 let url;
 let data;
 
-log(`args.urls: ${args.urls}`)
-
+// if there are no urls passed via the share sheet
+// get text from the clipboard
 if (args.urls.length > 0) {
   input = args.urls[0]
 } else {
   input = Pasteboard.paste()
 }
 
+// exit if there's no input
 if (!input) {
   log('nothing to work with')
   return
@@ -45,8 +53,10 @@ if (!input) {
 
 log(`input: ${input}`)
 
+// identify if the input is one of the supported
+// websites. if not, then it might be raw code.
+// ask the user about it
 var urlType = getUrlType(input)
-log(`urlType: ${JSON.stringify(urlType)}`)
 
 if (!urlType) {
   let resp = await presentAlert('Unable to identify urls from the input. Is it already the actual code?', ["Yes","No"])
@@ -58,6 +68,7 @@ if (!urlType) {
   }
 }
 
+// store the information into a common structure
 switch (urlType.name) {
   case 'gh-repo': 
     data = await pickFileFromRepo(input, '')
@@ -143,16 +154,26 @@ if (data) {
 //------------------------------------------------
 function getUrlType(url) {
   const typeMatchers = [
-    {name: 'gh-repo',         regex: /^https:\/\/github.com\/[^\s\/]+\/[^\s\/]+\/?$/},
-    {name: 'gh-repo-folder',  regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/tree(\/[^\s\/]+)(\/[^\s]+)$/ },
-    {name: 'gh-repo-file',    regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/blob(\/[^\s\/]+)(\/[^\s]+)$/ },
-    {name: 'gh-repo-raw',     regex: /^https:\/\/raw\.githubusercontent\.com\/([^\/]+\/)+([\S]+)$/ },
-    {name: 'gh-gist',         regex: /^(https:\/\/gist\.github.com\/)([^\/]+)\/([a-z0-9]+)$/},
-    {name: 'gh-gist-raw',     regex: /^https:\/\/gist\.githubusercontent\.com\/[^\/]+\/[^\/]+\/raw\/[^\/]+\/(.+)$/},
-    {name: 'pastebin-raw',    regex: /^https:\/\/pastebin\.com\/raw\/([a-zA-Z\d]+)/},
-    {name: 'pastebin',        regex: /^https:\/\/pastebin\.com\/([a-zA-Z\d]+)/},
-    {name: 'hastebin',        regex: /^https:\/\/hastebin\.com\/([a-z]+\.[a-z]+)$/},
-    {name: 'hastebin-raw',    regex: /^https:\/\/hastebin\.com\/raw\/([a-z]+\.[a-z]+)$/}
+    {name: 'gh-repo',         
+      regex: /^https:\/\/github.com\/[^\s\/]+\/[^\s\/]+\/?$/},
+    {name: 'gh-repo-folder',  
+      regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/tree(\/[^\s\/]+)(\/[^\s]+)$/ },
+    {name: 'gh-repo-file',    
+      regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/blob(\/[^\s\/]+)(\/[^\s]+)$/ },
+    {name: 'gh-repo-raw',     
+      regex: /^https:\/\/raw\.githubusercontent\.com\/([^\/]+\/)+([\S]+)$/ },
+    {name: 'gh-gist',         
+      regex: /^(https:\/\/gist\.github.com\/)([^\/]+)\/([a-z0-9]+)$/},
+    {name: 'gh-gist-raw',     
+      regex: /^https:\/\/gist\.githubusercontent\.com\/[^\/]+\/[^\/]+\/raw\/[^\/]+\/(.+)$/},
+    {name: 'pastebin-raw',    
+      regex: /^https:\/\/pastebin\.com\/raw\/([a-zA-Z\d]+)/},
+    {name: 'pastebin',        
+      regex: /^https:\/\/pastebin\.com\/([a-zA-Z\d]+)/},
+    {name: 'hastebin',        
+      regex: /^https:\/\/hastebin\.com\/([a-z]+\.[a-z]+)$/},
+    {name: 'hastebin-raw',    
+      regex: /^https:\/\/hastebin\.com\/raw\/([a-z]+\.[a-z]+)$/}
   ]
   let types = typeMatchers.filter( matcher => {
     return matcher.regex.test(url)
@@ -167,7 +188,8 @@ async function pickFileFromRepo(url, path) {
   log(`path = ${path}`)
 
   url = url.replace(/\/$/,'')
-  const apiUrl = url.replace('/github.com/','api.github.com/repos/')
+  const apiUrl = url.replace('/github.com/',
+                          'api.github.com/repos/')
 
   log(`apiURL=${apiUrl}`)
 
@@ -367,8 +389,10 @@ async function pickFileFromGist(gistId) {
 }
 //------------------------------------------------
 async function importScript(data) {
-  const fm = FileManager.iCloud() 
-
+  
+  var fm = USE_ICLOUD ? FileManager.iCloud() :
+                        FileManager.local()
+  
   log(`fn:importScript`)
   log(data.source)
   log(data.name)
