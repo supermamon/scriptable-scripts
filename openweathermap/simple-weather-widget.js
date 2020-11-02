@@ -7,12 +7,12 @@
 // you need an Open Weather API key.
 // Get one for free at: https://home.openweathermap.org/api_keys
 
-//const API_KEY = ""
+const API_KEY = ""
 
 // Alternatively, store API keys in a module
 //
-const keys = importModule('api-keys.js')
-const API_KEY = keys.OpenWeatherMap
+//const keys = importModule('api-keys.js')
+//const API_KEY = keys.OpenWeatherMap
 
 
 const owm = importModule('openweathermap.js')
