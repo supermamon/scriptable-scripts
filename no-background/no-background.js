@@ -6,7 +6,7 @@
 
 Script      : no-background.js
 Author      : me@supermamon.com
-Version     : 1.1.1
+Version     : 1.2.0
 Description :
   A module to create illusions of transparent
   backgrounds for Scriptable widgets
@@ -16,6 +16,9 @@ invisible widget shared on the Automtors discourse
 https://talk.automators.fm/t/widget-examples/7994/135
 
 Changelog   :
+v1.2.0
+- (new) applyTint method to simulate a 
+  semi-tranparent look
 v1.1.1
 - (fix) syntax error on generateSlices
 - (fix) incorrect iPhone 12 size
@@ -120,6 +123,17 @@ exports.generateSlices = async function() {
   message = `Slices saved for ${appearance} mode. You can switch to ${altAppearance} mode and run this again to also generate slices.`
   await presentAlert(message,["Ok"],ALERTS_AS_SHEETS)
  
+}
+exports.applyTint = function(widget, tint, alpha) {
+  tint = tint || '#ffffff'
+  alpha = alpha || 0.2
+
+  const col = new Color(tint, alpha)
+  let gradient = new LinearGradient()
+  gradient.locations = [0,1]
+  gradient.colors = [col, col]
+
+  widget.backgroundGradient = gradient
 }
 //------------------------------------------------
 exports.getSlice = async function(name) {
