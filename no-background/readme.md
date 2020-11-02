@@ -7,6 +7,7 @@ A module to create illusions of transparent backgrounds for Scriptable widgets.
 * Dark and Light mode support
 * Methods to get the actual background image or the image path
 * Store widget positions
+* Option for semi-transparent style
 
 --- 
 
@@ -65,6 +66,7 @@ widget.backgroundImage = await nobg.getSliceForWidget(widgetID)
 * [nobg-small-top-left-widget.js](examples/nobg-small-top-left-widget.js) - a very basic example for a widget on a fixed position
 * [nobg-configurable-widget-template.js](examples/nobg-configurable-widget-template.js) - example widget where the possition can be set at run-time
 * [weather-widget-414.js](examples/weather-widget-414.js) - weather example based off the [code by @eqsOne](https://talk.automators.fm/t/widget-examples/7994/414)
+* [semi-transparent-widget.js](semi-transparent-widget.js) - example widget with a semi-transparent background
 
 ## Preview
 

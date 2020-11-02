@@ -11,7 +11,7 @@ To use, share the URL via the share sheet or copy the url or actual code in the 
 * [peanuts-widget](peanuts-widget) - a widget to show current/random Peanuts™ comic
 * [ig-latest-post](instagram-widgets) - display the latest post from a users/users
 * [simple-weather-widget](openweathermap/simple-weather-widget.js) - example widget that uses the [openweathermap](openweathermap) module
-
+* [transparent-backgrounds](no-background/examples) - example scripts that use the [no-background](no-background) module
 
 ## Utilites
 ---

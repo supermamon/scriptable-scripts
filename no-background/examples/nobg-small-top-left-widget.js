@@ -18,6 +18,7 @@ widget.backgroundImage = await nobg.getSlice('small-top-left')
 
 var msg = `Hello Scriptable!`
 var mode = widget.addText(msg)
+mode.textColor = Color.white()
 mode.centerAlignText()
 
 if (config.runsInWidget) {
