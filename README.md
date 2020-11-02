@@ -10,10 +10,12 @@ To use, share the URL via the share sheet or copy the url or actual code in the 
 * [xkcd-widget](xkcd-widget) - a widget to show current/random xkcd comic
 * [peanuts-widget](peanuts-widget) - a widget to show current/random Peanuts™ comic
 * [ig-latest-post](instagram-widgets) - display the latest post from a users/users
+* [simple-weather-widget](openweathermap/simple-weather-widget.js) - example widget that uses the [openweathermap](openweathermap) module
 
 
 ## Utilites
 ---
 * [no-background](no-background) - a module to simulate transparent background for widgets. Includes examples.
+* [openweathermap](openweathermap) - A module to encapsulate OpenWeatherMap's [One Call API](https://openweathermap.org/api/one-call-api) and more
 * [basic-ui](utilities/basic-ui.js) - a helper moduel for user interactions
 * [json-utils](utilities/json-utils.js) - a helper module for reading, storing, and converint JSON.
