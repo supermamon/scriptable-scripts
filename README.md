@@ -9,7 +9,7 @@ To use, share the URL via the share sheet or copy the url or actual code in the 
 ## Widgets
 * [xkcd-widget](xkcd-widget) - a widget to show current/random xkcd comic
 * [peanuts-widget](peanuts-widget) - a widget to show current/random Peanuts™ comic
-* [ig-latest-post](instagram-widgets) - display the latest post from a users/users
+* [ig-latest-post](instagram-widgets) - randomly show between the 12 of the most recent post from a user or users.
 * [simple-weather-widget](openweathermap/simple-weather-widget.js) - example widget that uses the [openweathermap](openweathermap) module
 * [transparent-backgrounds](no-background/examples) - example scripts that use the [no-background](no-background) module
 

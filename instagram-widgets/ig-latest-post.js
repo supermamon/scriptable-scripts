@@ -5,11 +5,13 @@
 
 Script      : ig-latest-post.js
 Author      : me@supermamon.com
-Version     : 1.1.0
+Version     : 1.2.0
 Description :
   Displays the latest instagram post of a selected
-  user or users.
+  user or users. Tap the widget to open the 
+  Instagram post in the app
 
+Limitations: 
   * Works only for non-private users. 
   * Also does not work for some regions like 
     Switzerland for example. Instagram prevents 
@@ -18,6 +20,8 @@ Description :
     there.
 
 Changelog:
+v1.2.0 - Option to pick up to 12 of the most 
+         recent posts
 v1.1.0 - Options to show likes and comments count
 v1.0.0 - Initial release
 ----------------------------------------------- */
@@ -27,6 +31,7 @@ v1.0.0 - Initial release
 // parameter on the widget configuration screen,
 // it uses those instead.
 
+
 const USERS = [
   'beautifuldestinations',
   'philippines',
@@ -34,10 +39,14 @@ const USERS = [
   'palmtraveller'
 ]
 
-// display stuff at the bottom of the widget
+// stuff to display at the bottom of the widget
 const SHOW_USERNAME = true
 const SHOW_LIKES    = true
-const SHOW_COMMENTS = false
+const SHOW_COMMENTS = true
+
+// pick up to 12 of the most recent posts and
+// select randomly between those. 
+const MAX_RECENT_POSTS  = 12
 
 // desired interval in minutes to refresh the
 // widget. This will only tell IOS that it's
@@ -45,6 +54,8 @@ const SHOW_COMMENTS = false
 // refreshes is up to IOS
 const REFRESH_INTERVAL = 5 //mins
 
+
+// DO NOT EDIT BEYOND THIS LINE ------------------
 
 // only show the staus line is any of the
 // status items are visible
@@ -59,7 +70,8 @@ usernames = usernames.split(',')
 // choose a random username and fetch for the user
 // information
 const username = getRandom(usernames)
-const post = await getLatestPost(username)
+const post = await getLatestPost(username, 
+                                MAX_RECENT_POSTS)
 
 if (config.runsInWidget) {
   let widget = post.has_error ? 
@@ -108,7 +120,7 @@ async function createWidget(data, widgetFamily) {
       ['#ffffff00','#ffffff00','#00000088'],
       [0,.75,1])
 
-    // top spacer to push the bottome stack down
+    // top spacer to push the bottom stack down
     widget.addSpacer()
 
     // horizontal stack to hold the status line
@@ -120,15 +132,13 @@ async function createWidget(data, widgetFamily) {
     if (SHOW_USERNAME) {
       const eUsr = addText(stats, `@${data.username}`,'left', fontSize)
     }
-
+    // center spacer to push items to the sides
     stats.addSpacer()
-
     if (SHOW_LIKES) {
       const heart = addSymbol(stats, 'heart.fill', fontSize)
       const likes = abbreviateNumber(data.likes)
       const eLikes = addText(stats, likes, 'right', fontSize)
     }
-
     if (SHOW_COMMENTS) {
       const msg = addSymbol(stats, 'message.fill', fontSize)
       const comments = abbreviateNumber(data.comments)
@@ -187,7 +197,7 @@ async function download(dType, url) {
   return await req[`load${dType}`](url)
 }
 //------------------------------------------------
-async function getLatestPost(username) {
+async function getLatestPost(username, maxRecent) {
   const url = `https://instagram.com/${username}?__a=1`
   const req = new Request(url)
 
@@ -214,11 +224,11 @@ async function getLatestPost(username) {
       message: `${username} is private.`
     }
   }
-  // the latest post, that's why we're using 
-  // index 0. maybe we can randomize this in 
-  // the future to allow any of the recent 
-  // number of posts
-  const post = user.edge_owner_to_timeline_media.edges[0].node
+
+  maxRecent = maxRecent > 12 ? 12 : maxRecent
+  let idx = Math.floor(Math.random() * maxRecent)
+
+  const post = user.edge_owner_to_timeline_media.edges[idx].node
   var caption = ''
   if (post.edge_media_to_caption.edges.length) {
     caption = post.edge_media_to_caption.edges[0].node.text
