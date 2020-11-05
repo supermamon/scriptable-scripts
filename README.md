@@ -12,6 +12,7 @@ To use, share the URL via the share sheet or copy the url or actual code in the 
 * [ig-latest-post](instagram-widgets) - randomly show between the 12 of the most recent post from a user or users.
 * [simple-weather-widget](openweathermap/simple-weather-widget.js) - example widget that uses the [openweathermap](openweathermap) module
 * [transparent-backgrounds](no-background/examples) - example scripts that use the [no-background](no-background) module
+* [us-elections.js](misc/us-elections.js) - show the latest electoral votes for all candidates
 
 ## Utilites
 ---
