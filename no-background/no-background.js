@@ -6,7 +6,7 @@
 
 Script      : no-background.js
 Author      : me@supermamon.com
-Version     : 1.2.0
+Version     : 1.3.0
 Description :
   A module to create illusions of transparent
   backgrounds for Scriptable widgets
@@ -16,6 +16,11 @@ invisible widget shared on the Automtors discourse
 https://talk.automators.fm/t/widget-examples/7994/135
 
 Changelog   :
+v1.3.0 
+- (update) automativally prompt for setup when
+  slices are missing or if the widget's
+  position is not yet stored.
+
 v1.2.0
 - (new) applyTint method to simulate a 
   semi-tranparent look
@@ -44,7 +49,8 @@ var exports = {}
 //------------------------------------------------
 exports.cachePath = cachePath
 //------------------------------------------------
-exports.generateSlices = async function() {
+exports.generateSlices = async function({caller='none'}) {
+  const opts = {caller}
 
   let appearance = (await isUsingDarkAppearance()) ? 'dark' : 'light'
   let altAppearance = appearance == 'dark' ? 'light' : 'dark'
@@ -120,8 +126,15 @@ exports.generateSlices = async function() {
 
   }
 
-  message = `Slices saved for ${appearance} mode. You can switch to ${altAppearance} mode and run this again to also generate slices.`
+  if (opts.caller!='getSliceForWidget') {
+    message = `Slices saved for ${appearance} mode. You can switch to ${altAppearance} mode and run this again to also generate slices.`
+  } else {
+    message = 'Slices saved.'
+  }
   await presentAlert(message,["Ok"],ALERTS_AS_SHEETS)
+
+
+  return true 
  
 }
 exports.applyTint = function(widget, tint, alpha) {
@@ -141,13 +154,13 @@ exports.getSlice = async function(name) {
 
   let position = name
   const imgPath = fm.joinPath(cachePath, `${appearance}-${position}.jpg`)
-  log(imgPath)
   if (!fm.fileExists(imgPath)) {
-    log('image does not exists')
-    return null
+    log('image does not exists. setup required.')
+    var setupCompleted = await exports.generateSlices({caller:'getSliceForWidget'})
+    if (!setupCompleted) {
+      return null
+    }
   }
-
-  log(imgPath)
 
   if (!LOCAL_CACHE) await fm.downloadFileFromiCloud(imgPath)
 
@@ -161,15 +174,36 @@ exports.getPathForSlice = async function(slice_name) {
     `${appearance}-${slice_name}.jpg`)
 }
 //------------------------------------------------
-exports.getSliceForWidget = async function(instance_name) {
-  const appearance = (await isUsingDarkAppearance()) ? 'dark' : 'light'
-  const cfg = await loadConfig()
-  const position = cfg[instance_name]
+exports.getSliceForWidget = async function(instance_name, reset=false) {
+  const appearance = (await isUsingDarkAppearance()) ? 'dark' : 'light'  
+  var cfg = await loadConfig()
+  var position = reset ? null : cfg[instance_name]
   if (!position) {
     log(`Background for "${instance_name}" is not yet set.`)
-    return null
-  }
 
+    // check if slices exists
+    const testImage = fm.joinPath(cachePath, `${appearance}-medium-top.jpg`)
+    let readyToChoose = false
+    if (!fm.fileExists(testImage)) {
+      // need to generate slices
+      readyToChoose = await exports.generateSlices({caller:'getSliceForWidget'})
+    } else {
+      readyToChoose = true
+    }
+
+    // now set the 
+    if (readyToChoose) {
+      var backgrounChosen = await exports.chooseBackgroundSlice(instance_name)
+    }
+
+    if (backgrounChosen) {
+      cfg = await loadConfig()
+      position = cfg[instance_name]
+    } else {
+      return null
+    }
+    
+  }
   const imgPath = fm.joinPath(cachePath, `${appearance}-${position}.jpg`)
   if (!fm.fileExists(imgPath)) {
     log(`Slice does not exists - ${appearance}-${position}.jpg`)
@@ -203,7 +237,8 @@ exports.chooseBackgroundSlice = async function(name) {
   cfg[name] = `${widgetSize}-${position}`
 
   await saveConfig(cfg)
-  await presentAlert("Background saved. Run this option again if you changed your widget's size or position.",["Ok"],ALERTS_AS_SHEETS)
+  await presentAlert("Background saved.",["Ok"],ALERTS_AS_SHEETS)
+  return true
 
 }
 //------------------------------------------------

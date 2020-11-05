@@ -21,7 +21,7 @@ async function createWidget() {
   
   // create a gradient overlay to mimic a 
   // semi-transparent look 
-  nobg.applyTint(widget, tint, 0.05)
+  nobg.applyTint(widget, tint, 0.2)
   
   widget.addSpacer()
   let text = widget.addText('semi-transparent')
