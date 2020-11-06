@@ -22,7 +22,7 @@ let resp = await presentAlert(
   ])
 switch (resp) {
   case 0:
-    await nobg.generateSlices()
+    await nobg.generateSlices({})
     break;
   case 1:
     await nobg.resetConfig()
