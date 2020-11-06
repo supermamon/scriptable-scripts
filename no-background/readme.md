@@ -11,18 +11,19 @@ A module to create illusions of transparent backgrounds for Scriptable widgets.
 
 --- 
 
-## The 2-Step Setup
+## The 3-Step Setup
 
 1. Download both [no-background.js](no-background.js)
 2. Add the following code in your widget code
 
-```javascript
-const nobg = importModule('no-background.js')
-const widget = new ListWidget()
-widget.backgroundImage = await nobg.getSliceForWidget(Script.name())
+    ```javascript
+    const nobg = importModule('no-background.js')
+    const widget = new ListWidget()
+    widget.backgroundImage = await  nobg.getSliceForWidget(Script.name())
 
-// the rest of your widget code 
-```
+    // the rest of your widget code 
+    ```
+3. Run your widget!
 
 --- 
 
@@ -59,7 +60,7 @@ You'll have to run each individual widget to setup their positions.
 
 ### Static Location
 
-If you have widgets that you are most likely not to move around, you can specify a it's position using the `getSlice` method.
+If you have widgets that you are most likely not to move around, you can specify a its position using the `getSlice` method.
 
 ```javascript
 const nobg = importModule('no-background.js')
@@ -70,6 +71,7 @@ widget.backgroundImage = await nobg.getSlice('medium-top')
 ```
 
 Valid slice names are:
+
 - `small-top-left` / `small-top-right`
 - `small-middle-left` / `small-middle-right`
 - `small-bottom-left` / `small-bottom-right`
@@ -91,6 +93,7 @@ widget.backgroundImage = Image.fromFile(bgpath)
 // the rest of your widget code 
 ```
 
+*Like the `getSliceForWidget` method, both the `getSlice` and `getPathForSlice` also prompt for setup if the slices don't exist.*
 
 ## Examples
 
