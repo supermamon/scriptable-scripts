@@ -6,7 +6,7 @@
 
 Script      : no-background.js
 Author      : me@supermamon.com
-Version     : 1.3.0
+Version     : 1.4.0
 Description :
   A module to create illusions of transparent
   backgrounds for Scriptable widgets
@@ -16,6 +16,8 @@ invisible widget shared on the Automtors discourse
 https://talk.automators.fm/t/widget-examples/7994/135
 
 Changelog   :
+v1.4.0 
+- (update) also prompt for setup on the getPathForSlice method
 v1.3.0 
 - (update) automativally prompt for setup when
   slices are missing or if the widget's
@@ -126,7 +128,7 @@ exports.generateSlices = async function({caller='none'}) {
 
   }
 
-  if (opts.caller!='getSliceForWidget') {
+  if (opts.caller!='self') {
     message = `Slices saved for ${appearance} mode. You can switch to ${altAppearance} mode and run this again to also generate slices.`
   } else {
     message = 'Slices saved.'
@@ -170,8 +172,18 @@ exports.getSlice = async function(name) {
 //------------------------------------------------
 exports.getPathForSlice = async function(slice_name) {
   let appearance = (await isUsingDarkAppearance()) ? 'dark' : 'light'
-  return fm.joinPath(cachePath, 
+  let imgPath = fm.joinPath(cachePath, 
     `${appearance}-${slice_name}.jpg`)
+    
+  let fileExists = fm.fileExists(imgPath)
+  if (!fileExists) {
+    fileExists = await exports.generateSlices('self')
+  } else {
+    imgPath = null
+  }
+  
+  if (!LOCAL_CACHE && fileExists) await fm.downloadFileFromiCloud(imgPath)
+  return imgPath
 }
 //------------------------------------------------
 exports.getSliceForWidget = async function(instance_name, reset=false) {
@@ -186,7 +198,7 @@ exports.getSliceForWidget = async function(instance_name, reset=false) {
     let readyToChoose = false
     if (!fm.fileExists(testImage)) {
       // need to generate slices
-      readyToChoose = await exports.generateSlices({caller:'getSliceForWidget'})
+      readyToChoose = await exports.generateSlices({caller:'self'})
     } else {
       readyToChoose = true
     }
