@@ -9,10 +9,11 @@ To use, share the URL via the share sheet or copy the url or actual code in the 
 ## Widgets
 * [xkcd-widget](xkcd-widget) - a widget to show current/random xkcd comic
 * [peanuts-widget](peanuts-widget) - a widget to show current/random Peanuts™ comic
-* [ig-latest-post](instagram-widgets) - randomly show between the 12 of the most recent post from a user or users.
+* [ig-latest-post](instagram-widgets/ig-latest-post.js) - randomly show between the 12 of the most recent post from a user or users.
 * [simple-weather-widget](openweathermap/simple-weather-widget.js) - example widget that uses the [openweathermap](openweathermap) module
 * [transparent-backgrounds](no-background/examples) - example scripts that use the [no-background](no-background) module
 * [us-elections.js](misc/us-elections.js) - show the latest electoral votes for all candidates
+* [rh-profile-widget.js](routinehub-widgets/rh-profile-widget.js) - A widget to show the current shortcuts and download counts of a routinehub.co profile
 
 ## Utilites
 ---
