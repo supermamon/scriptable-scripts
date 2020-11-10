@@ -5,7 +5,7 @@
 /* -----------------------------------------------
 Script      : Import-Script.js
 Author      : me@supermamon.com
-Version     : 1.4.0
+Version     : 1.5.0
 Description :
   A script to download and import files into the
   Scriptable folder. Includes a mini repo file 
@@ -19,6 +19,10 @@ Supported Sites
 * raw code from the clipboard
 
 Changelog:
+v1.5.0 - (new) ability to accept urls via the 
+         queryString argument. This is to allow
+         creating scriptable:/// links on webpages
+         to download scripts
 v1.4.0 - (new) option to use local storage instead
          of iCloud for users who don't have 
          iCloud enabled
@@ -41,6 +45,8 @@ let data;
 // get text from the clipboard
 if (args.urls.length > 0) {
   input = args.urls[0]
+} else if (args.queryParameters.url) {
+  input = args.queryParameters.url
 } else {
   input = Pasteboard.paste()
 }
@@ -57,7 +63,7 @@ log(`input: ${input}`)
 // websites. if not, then it might be raw code.
 // ask the user about it
 var urlType = getUrlType(input)
-
+log(urlType)
 if (!urlType) {
   let resp = await presentAlert('Unable to identify urls from the input. Is it already the actual code?', ["Yes","No"])
   if (resp==0) {
@@ -133,6 +139,14 @@ switch (urlType.name) {
       download_url: input
     }
     break;
+  case 'raw': 
+    var slices = input.match(urlType.regex)
+    data = {
+      source: 'raw-url',
+      name: `${slices[1]}`,
+      download_url: input
+    }
+    break;
   case 'code':
     data = {
       source: 'raw',
@@ -173,7 +187,9 @@ function getUrlType(url) {
     {name: 'hastebin',        
       regex: /^https:\/\/hastebin\.com\/([a-z]+\.[a-z]+)$/},
     {name: 'hastebin-raw',    
-      regex: /^https:\/\/hastebin\.com\/raw\/([a-z]+\.[a-z]+)$/}
+      regex: /^https:\/\/hastebin\.com\/raw\/([a-z]+\.[a-z]+)$/},
+    {name: 'raw',    
+      regex: /(^https?:\/\/[^\s]+$)/}
   ]
   let types = typeMatchers.filter( matcher => {
     return matcher.regex.test(url)
