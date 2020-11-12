@@ -64,7 +64,7 @@ Example widgets that use the `no-background` module. [Read more](no-background).
 * 3-Step Example [Source](no-background/examples/nobg-auto.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/nobg-auto.js)
 * Configurable Widget Template [Source](no-background/examples/nobg-configurable-widget-template.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/nobg-configurable-widget-template.js)
 * Weather Forecast [Source](no-background/examples/weather-widget-414.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/weather-widget-414.js)
-* Semi-Transparent Widget [Source](no-background/semi-transparent-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/semi-transparent-widget.js)
+* Semi-Transparent Widget [Source](no-background/semi-transparent.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/semi-transparent.js)
 
 ![](no-background/preview-sml.jpg)
 
@@ -80,7 +80,7 @@ Show the latest electoral votes for all candidates.
 ### RoutineHub Profile Widget
 A widget to show the current shortcuts and download counts of a [routinehub.co](https://routinehub.co) profile. 
 
-[Source](routinehub-widgets/rh-profile-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/scriptable-scripts/routinehub-widgets/rh-profile-widget.js) 
+[Source](routinehub-widgets/rh-profile-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/routinehub-widgets/rh-profile-widget.js) 
 
 ![](routinehub-widgets/preview-rhp-sml.jpg)
 
