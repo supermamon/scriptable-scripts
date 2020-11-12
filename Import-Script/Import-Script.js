@@ -5,7 +5,7 @@
 /* -----------------------------------------------
 Script      : Import-Script.js
 Author      : me@supermamon.com
-Version     : 1.5.1
+Version     : 1.5.2
 Description :
   A script to download and import files into the
   Scriptable folder. Includes a mini repo file 
@@ -19,6 +19,7 @@ Supported Sites
 * raw code from the clipboard
 
 Changelog:
+v1.5.2 - (fix) detection errors on last version
 v1.5.1 - (fix) unrecognized github file urls
 v1.5.0 - (new) ability to accept urls via the 
          queryString argument. This is to allow
@@ -36,8 +37,8 @@ v1.1.0 - support for gists with multiple files
 v1.0.0 - Initial releast
 ----------------------------------------------- */
 
-// set to false if you're not using iCloud
-const USE_ICLOUD = true
+// detect is icloud is used
+const USE_ICLOUD =  module.filename.includes('Documents/iCloud~')
 
 let url;
 let data;
@@ -80,80 +81,32 @@ if (!urlType) {
 }
 
 // store the information into a common structure
-switch (urlType.name) {
-  case 'gh-repo': 
+switch (urlType.type) {
+  case 'repo': 
     data = await pickFileFromRepo(input, '')
     break;
-  case 'gh-repo-folder':
-    var slices = input.match(urlType.regex)
-    data = await pickFileFromRepo(slices[1], slices[3].replace(/^\//,''))
+  case 'repo-folder':
+    data = await pickFileFromRepo(urlType.slices[urlType.repoIndex], urlType.slices[urlType.pathIndex])
     break;
-  case 'gh-repo-file-noblob': 
-    var slices = input.match(urlType.regex)
-    data = await getRepoFileDetails(slices[1],slices[2])
-    break;
-  case 'gh-repo-file': 
-    var slices = input.match(urlType.regex)
-    data = await getRepoFileDetails(slices[1],slices[3])
-    break;
-  case 'gh-repo-raw': 
-    var slices = input.match(urlType.regex)
-    data = {
-      source: 'repo',
-      name: decodeURIComponent(`${slices[2]}`),
-      download_url: input
-    }
-    break;
-  case 'gh-gist': 
-    var slices = input.match(urlType.regex)
-    data = await pickFileFromGist(slices[3])
-    break;
-  case 'gh-gist-raw': 
-    var slices = input.match(urlType.regex)
-    data = {
-      source: 'gist',
-      name: `${decodeURIComponent(slices[1])}`,
-      download_url: input
-    }
-    break;
-  case 'pastebin': 
-    var slices = input.match(urlType.regex)
-    data = {
-      source: 'pastebin',
-      name: `${slices[1]}.js`,
-      download_url: input.replace('.com','.com/raw')
-    }
-    break;
-  case 'pastebin-raw': 
-    var slices = input.match(urlType.regex)
-    data = {
-      source: 'pastebin',
-      name: `${slices[1]}.js`,
-      download_url: input
-    }
-    break;
-  case 'hastebin': 
-    var slices = input.match(urlType.regex)
-    data = {
-      source: 'hastebin',
-      name: `${slices[1]}`,
-      download_url: input.replace('.com','.com/raw')
-    }
-    break;
-  case 'hastebin-raw': 
-    var slices = input.match(urlType.regex)
-    data = {
-      source: 'hastebin',
-      name: `${slices[1]}`,
-      download_url: input
-    }
+  case 'repo-file': 
+    data = await getRepoFileDetails(urlType.slices[urlType.repoIndex],urlType.slices[urlType.pathIndex])
     break;
   case 'raw': 
     var slices = input.match(urlType.regex)
     data = {
-      source: 'raw-url',
-      name: `${slices[1]}`,
+      source: 'rawurl',
+      name: decodeURIComponent(`${urlType.slices[urlType.nameIndex]}${urlType.extension}`),
       download_url: input
+    }
+    break;
+  case 'gist': 
+    data = await pickFileFromGist(urlType.slices[urlType.idIndex])
+    break;
+  case 'pastebin': 
+    data = {
+      source: 'pastebin',
+      name: `${urlType.slices[urlType.nameIndex]}${urlType.extension}`,
+      download_url: input.replace('.com','.com/raw')
     }
     break;
   case 'code':
@@ -165,6 +118,9 @@ switch (urlType.name) {
     break;
   default:
 }
+
+log('data')
+log(data)
 
 if (data) {
   let importedFile = await importScript(data)
@@ -178,34 +134,80 @@ if (data) {
 function getUrlType(url) {
   const typeMatchers = [
     {name: 'gh-repo',         
-      regex: /^https:\/\/github.com\/[^\s\/]+\/[^\s\/]+\/?$/},
+      regex: /^https:\/\/github.com\/[^\s\/]+\/[^\s\/]+\/?$/,
+      type: 'repo',
+      repoIndex: 0
+    },
     {name: 'gh-repo-folder',  
-      regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/tree(\/[^\s\/]+)(\/[^\s]+)$/ },
+      regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/tree\/[^\s\/]+(\/[^\s]+\/?)$/ ,
+      type: 'repo-folder',
+      repoIndex: 1,
+      pathIndex: 2
+    },
     {name: 'gh-repo-file-noblob',  
-      regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)([^\s]+\/[^\s]+\.[^\s]+)$/ },
+      regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/(?!blob)([^\s]+\.[a-zA-Z\d]+)$/,
+      type: 'repo-file',
+      repoIndex: 1,
+      pathIndex: 2
+    },
     {name: 'gh-repo-file',    
-      regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/blob(\/[^\s\/]+)(\/[^\s]+)$/ },
+      regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/blob\/[^\s\/]+(\/[^\s]+)$/,
+      type: 'repo-file',
+      repoIndex: 1,
+      pathIndex: 2
+    },
     {name: 'gh-repo-raw',     
-      regex: /^https:\/\/raw\.githubusercontent\.com\/([^\/]+\/)+([\S]+)$/ },
+      regex: /^https:\/\/raw\.githubusercontent\.com(\/[^\/\s]+)+\/([^\s]+)/,
+      type: 'raw',
+      nameIndex: 2
+    },
     {name: 'gh-gist',         
-      regex: /^(https:\/\/gist\.github.com\/)([^\/]+)\/([a-z0-9]+)$/},
+      regex: /^(https:\/\/gist\.github.com\/)([^\/]+)\/([a-z0-9]+)$/,
+      type: 'gist',
+      idIndex: 3
+    },
     {name: 'gh-gist-raw',     
-      regex: /^https:\/\/gist\.githubusercontent\.com\/[^\/]+\/[^\/]+\/raw\/[^\/]+\/(.+)$/},
+      regex: /^https:\/\/gist\.githubusercontent\.com\/[^\/]+\/[^\/]+\/raw\/[^\/]+\/(.+)$/,
+      type: 'raw',
+      nameIndex: 1
+    },
     {name: 'pastebin-raw',    
-      regex: /^https:\/\/pastebin\.com\/raw\/([a-zA-Z\d]+)/},
+      regex: /^https:\/\/pastebin\.com\/raw\/([a-zA-Z\d]+)$/,
+      type: 'raw',
+      nameIndex: 1,
+      extension: '.js'
+    },
     {name: 'pastebin',        
-      regex: /^https:\/\/pastebin\.com\/([a-zA-Z\d]+)/},
+      regex: /^https:\/\/pastebin\.com\/(?!raw)([a-zA-Z\d]+)/,
+      type: 'pastebin',
+      nameIndex: 1,
+      extension: '.js'
+    },
     {name: 'hastebin',        
-      regex: /^https:\/\/hastebin\.com\/([a-z]+\.[a-z]+)$/},
+      regex: /^https:\/\/hastebin\.com\/([a-z]+\.[a-z]+)$/,
+      type: 'pastebin',
+      nameIndex: 1
+    },
     {name: 'hastebin-raw',    
-      regex: /^https:\/\/hastebin\.com\/raw\/([a-z]+\.[a-z]+)$/},
-    {name: 'raw',    
-      regex: /(^https?:\/\/[^\s]+$)/}
+      regex: /^https:\/\/hastebin\.com\/raw\/([a-z]+\.[a-z]+)$/,
+      type: 'raw',
+      nameIndex: 1
+    }
   ]
   let types = typeMatchers.filter( matcher => {
     return matcher.regex.test(url)
   })
-  return types.length?types[0]:null
+
+  var type;
+  if (types.length) {
+    type = types[0]
+    type['slices'] = url.match(type.regex)
+    if (!type.hasOwnProperty('extension')) {
+      type.extension = ''
+    }
+  }
+
+  return type
 }
 //------------------------------------------------
 async function pickFileFromRepo(url, path) {
@@ -331,6 +333,8 @@ async function getRepoFileDetails(repoUrl, path) {
   path = path.replace(/^\//,'')
 
   log(`repo ${repoUrl}`)
+  log(`path ${path}`)
+  path = path.replace(/blob\/[^\/]+/,'')
   log(`path ${path}`)
 
   let apiUrl = repoUrl.replace('/github.com/',`api.github.com/repos/`)
