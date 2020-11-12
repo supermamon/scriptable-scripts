@@ -104,4 +104,4 @@ widget.backgroundImage = Image.fromFile(bgpath)
 
 ## Preview
 
-![](preview.png)
+![](preview-lrg.png)

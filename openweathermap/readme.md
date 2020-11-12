@@ -91,4 +91,4 @@ Nighttime and SFSymbol information fields for the `current` and `hourly` data
 
 * [simple-weather-widget.js](simple-weather-widget.js) - a weather widget that uses this module. 
 
-![](sww-preview.jpg)
+![](preview-lrg.jpg)

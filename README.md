@@ -1,23 +1,87 @@
 # [Scriptable.app](https://scriptable.app) scripts
 
 ## Scripts
-* [Import-Script.js](Import-Script.js) - a script to download and import other scripts into your Scriptable library. Supports github.com repos and gists, pastebin.com, hastebin.com and raw javascript code. 
-To use, share the URL via the share sheet or copy the url or actual code in the clipboard the run the script. 
+* [Import-Script.js](Import-Script/Import-Script.scriptable) - a script to download and import other scripts into your Scriptable library. [Read more](Import-Script).  
+After you downloaded Import-Script, tap on the **Import** links below to import them into your library.
 
 * [OAuth2](OAuth2) - see [Automators.fm topic](https://talk.automators.fm/t/building-a-general-purpose-oauth-redirect-proxy-for-shortcuts-and-scriptable/4420).
 
-## Widgets
-* [xkcd-widget](xkcd-widget) - a widget to show current/random xkcd comic
-* [peanuts-widget](peanuts-widget) - a widget to show current/random Peanuts™ comic
-* [ig-latest-post](instagram-widgets/ig-latest-post.js) - randomly show between the 12 of the most recent post from a user or users.
-* [simple-weather-widget](openweathermap/simple-weather-widget.js) - example widget that uses the [openweathermap](openweathermap) module
-* [transparent-backgrounds](no-background/examples) - example scripts that use the [no-background](no-background) module
-* [us-elections.js](misc/us-elections.js) - show the latest electoral votes for all candidates
-* [rh-profile-widget.js](routinehub-widgets/rh-profile-widget.js) - A widget to show the current shortcuts and download counts of a routinehub.co profile. [\[▼\]](https://open.scriptable.app/run/Import-Script?url=https://github.com/scriptable-scripts/routinehub-widgets/rh-profile-widget.js)
-
 ## Utilites
 ---
-* [no-background](no-background) - a module to simulate transparent background for widgets. Includes examples.
+* [no-background](no-background) - a module to simulate transparent background for widgets.
 * [openweathermap](openweathermap) - A module to encapsulate OpenWeatherMap's [One Call API](https://openweathermap.org/api/one-call-api) and more
 * [basic-ui](utilities/basic-ui.js) - a helper moduel for user interactions
 * [json-utils](utilities/json-utils.js) - a helper module for reading, storing, and converint JSON.
+
+
+## Widgets
+
+* [xkcd-widget](#xkcd-widget)
+* [Peanuts™ Widget](#peanuts-widget)
+* [Instagram Latest Posts](#instagram-latest-posts)
+* [Simple Weather Widget](#simple-weather-widget)
+* [Transparent Widgets](#transparent-widgets)
+* [US Elections Widget](#us-elections-widget)
+* [RoutineHub Profile Widget](#routinehub-profile-widget)
+
+---
+### xkcd Widget
+A widget to show current/random xkcd comic.
+
+[Source](xkcd-widget/xkcd.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/xkcd-widget/xkcd.js) 
+
+![](xkcd-widget/preview.jpg)
+
+--- 
+### Peanuts Widget
+A widget to show current/random Peanuts™ comic.
+
+[Source](peanuts-widget/peanuts-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/peanuts-widget/peanuts-widget.js)
+
+![](peanuts-widget/preview.jpg)
+
+---
+### Instagram Latest Posts
+Randomly show between the 12 of the most recent post from a user or users.
+
+[Source](nstagram-widgets/ig-latest-post.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/instagram-widgets/ig-latest-post.js)
+
+![](instagram-widgets/preview-igl.jpg)
+
+---
+### Simple Weather Widget
+
+Example widget that uses the [openweathermap](openweathermap) module. [Read more](openweathermap).
+
+[Source](openweathermap/simple-weather-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/openweathermap/simple-weather-widget.js)
+
+![](openweathermap/preview-sml.jpg)
+
+---
+### Transparent Widgets
+Example widgets that use the `no-background` module. [Read more](no-background).
+
+* 3-Step Example [Source](no-background/examples/nobg-auto.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/nobg-auto.js)
+* Configurable Widget Template [Source](no-background/examples/nobg-configurable-widget-template.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/nobg-configurable-widget-template.js)
+* Weather Forecast [Source](no-background/examples/weather-widget-414.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/weather-widget-414.js)
+* Semi-Transparent Widget [Source](no-background/semi-transparent-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/semi-transparent-widget.js)
+
+![](no-background/preview-sml.jpg)
+
+---
+### US Elections Widget
+Show the latest electoral votes for all candidates.
+
+[Source](misc/us-elections.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/misc/us-elections.js)
+
+![](misc/preview-uspolls.jpg)
+
+---
+### RoutineHub Profile Widget
+A widget to show the current shortcuts and download counts of a [routinehub.co](https://routinehub.co) profile. 
+
+[Source](routinehub-widgets/rh-profile-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/scriptable-scripts/routinehub-widgets/rh-profile-widget.js) 
+
+![](routinehub-widgets/preview-rhp-sml.jpg)
+
+
