@@ -5,7 +5,7 @@
 /* -----------------------------------------------
 Script      : Import-Script.js
 Author      : me@supermamon.com
-Version     : 1.5.0
+Version     : 1.5.1
 Description :
   A script to download and import files into the
   Scriptable folder. Includes a mini repo file 
@@ -19,6 +19,7 @@ Supported Sites
 * raw code from the clipboard
 
 Changelog:
+v1.5.1 - (fix) unrecognized github file urls
 v1.5.0 - (new) ability to accept urls via the 
          queryString argument. This is to allow
          creating scriptable:/// links on webpages
@@ -51,6 +52,9 @@ if (args.urls.length > 0) {
   input = Pasteboard.paste()
 }
 
+
+//await presentAlert(`[${input}]`)
+
 // exit if there's no input
 if (!input) {
   log('nothing to work with')
@@ -64,6 +68,7 @@ log(`input: ${input}`)
 // ask the user about it
 var urlType = getUrlType(input)
 log(urlType)
+//await presentAlert(JSON.stringify(urlType))
 if (!urlType) {
   let resp = await presentAlert('Unable to identify urls from the input. Is it already the actual code?', ["Yes","No"])
   if (resp==0) {
@@ -82,6 +87,10 @@ switch (urlType.name) {
   case 'gh-repo-folder':
     var slices = input.match(urlType.regex)
     data = await pickFileFromRepo(slices[1], slices[3].replace(/^\//,''))
+    break;
+  case 'gh-repo-file-noblob': 
+    var slices = input.match(urlType.regex)
+    data = await getRepoFileDetails(slices[1],slices[2])
     break;
   case 'gh-repo-file': 
     var slices = input.match(urlType.regex)
@@ -172,6 +181,8 @@ function getUrlType(url) {
       regex: /^https:\/\/github.com\/[^\s\/]+\/[^\s\/]+\/?$/},
     {name: 'gh-repo-folder',  
       regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/tree(\/[^\s\/]+)(\/[^\s]+)$/ },
+    {name: 'gh-repo-file-noblob',  
+      regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)([^\s]+\/[^\s]+\.[^\s]+)$/ },
     {name: 'gh-repo-file',    
       regex: /^(https:\/\/github.com\/[^\s\/]+\/[^\s\/]+)\/blob(\/[^\s\/]+)(\/[^\s]+)$/ },
     {name: 'gh-repo-raw',     
@@ -319,13 +330,23 @@ async function getRepoFileDetails(repoUrl, path) {
   repoUrl = repoUrl.replace(/\/$/,'')
   path = path.replace(/^\//,'')
 
+  log(`repo ${repoUrl}`)
+  log(`path ${path}`)
+
   let apiUrl = repoUrl.replace('/github.com/',`api.github.com/repos/`)
   apiUrl = `${apiUrl}/contents/${path}`
   const req = new Request(apiUrl)
   try {
     var resp = await req.loadJSON()
+    log(resp)
+    if (resp.message) {
+      await presentAlert(resp.message)
+      return null
+    }
+    
   } catch(e) {
-    await presentAlert("Unable to fetch repo information. Likely due to api limits", ["OK"])
+    log(e.message)
+    await presentAlert(`Unable to fetch repo information - ${e.message}`, ["OK"])
     return null
   }
 
