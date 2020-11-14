@@ -6,7 +6,7 @@
 
 Script      : no-background.js
 Author      : me@supermamon.com
-Version     : 1.4.0
+Version     : 1.5.0
 Description :
   A module to create illusions of transparent
   backgrounds for Scriptable widgets
@@ -16,6 +16,8 @@ invisible widget shared on the Automtors discourse
 https://talk.automators.fm/t/widget-examples/7994/135
 
 Changelog   :
+v1.5.0 
+- (update) iPhone 12 Pro Max compatibility
 v1.4.0 
 - (update) also prompt for setup on the getPathForSlice method
 v1.3.0 
@@ -155,6 +157,7 @@ exports.getSlice = async function(name) {
   let appearance = (await isUsingDarkAppearance()) ? 'dark' : 'light'
 
   let position = name
+  //log(position)
   const imgPath = fm.joinPath(cachePath, `${appearance}-${position}.jpg`)
   if (!fm.fileExists(imgPath)) {
     log('image does not exists. setup required.')
@@ -263,7 +266,7 @@ exports.resetConfig = async function() {
 //------------------------------------------------
 async function loadConfig() {
   const configPath = fm.joinPath(cachePath, "widget-positions.json")
-  log(` config exists == ${fm.fileExists(configPath)}`)
+  //log(` config exists == ${fm.fileExists(configPath)}`)
   if(!fm.fileExists(configPath)){
     await fm.writeString(configPath,"{}")
     return {}
@@ -304,9 +307,21 @@ const widgetPositions = {
 }
 //------------------------------------------------
 const phoneSizes =  {
+  "2778": {
+    "models"  : ["12 Pro Max"],
+    "small"   : { "w": 510,   "h":  510 },
+    "medium"  : { "w": 1092,  "h": 510 },
+    "large"   : { "w": 1092,  "h": 1146},
+    "left"    : 96,
+    "right"   : 678,
+    "top"     : 246,
+    "middle"  : 882,
+    "bottom"  : 1518
+  },
+
   "2532": {
     "models"  : ["12", "12 Pro"],
-    "small"   : {"w": 474, "h": 474 },
+    "small"   : {"w": 474,  "h": 474 },
     "medium"  : {"w": 1014, "h": 474 },
     "large"   : {"w": 1014, "h": 1062 },
     "left"    : 78,
