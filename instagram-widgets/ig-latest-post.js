@@ -5,7 +5,7 @@
 
 Script      : ig-latest-post.js
 Author      : me@supermamon.com
-Version     : 1.2.0
+Version     : 1.3.0
 Description :
   Displays the latest instagram post of a selected
   user or users. Tap the widget to open the 
@@ -20,6 +20,7 @@ Limitations:
     there.
 
 Changelog:
+v1.3.0 - Pick the highest resolution photo
 v1.2.0 - Option to pick up to 12 of the most 
          recent posts
 v1.1.0 - Options to show likes and comments count
@@ -228,21 +229,32 @@ async function getLatestPost(username, maxRecent) {
   maxRecent = maxRecent > 12 ? 12 : maxRecent
   let idx = Math.floor(Math.random() * maxRecent)
 
-  const post = user.edge_owner_to_timeline_media.edges[idx].node
+  const rec = user.edge_owner_to_timeline_media.edges[idx].node
+
+  const preq = new Request(`https://www.instagram.com/p/${rec.shortcode}?__a=1`)
+  const resp = await preq.loadJSON()
+  const post = resp.graphql.shortcode_media;
+
   var caption = ''
   if (post.edge_media_to_caption.edges.length) {
     caption = post.edge_media_to_caption.edges[0].node.text
   }
 
+  let media_url = post.display_url
+  if (post.hasOwnProperty('display_resources')) {
+    log('has display resources')
+    media_url = post.display_resources[post.display_resources.length-1].src
+  }
+   
   return {
     has_error: false,
     username: username,
     shortcode: post.shortcode,
-    display_url: post.display_url,
+    display_url: media_url,
     is_video: post.is_video,
     caption: caption,
-    comments: post.edge_media_to_comment.count,
-    likes: post.edge_liked_by.count
+    comments: post.edge_media_preview_comment.count,
+    likes: post.edge_media_preview_like.count
   }
 }
 //------------------------------------------------
