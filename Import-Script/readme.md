@@ -2,7 +2,7 @@
 
 A script importer with a built-in repo/gist browser to choose the script to added to the Scriptable.app library.
 
-[Download Import-Script](Import-Script.scriptable).
+[Download Import-Script](Import-Script.js).
 
 ### Supported Websites
 

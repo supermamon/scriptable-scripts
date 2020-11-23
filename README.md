@@ -1,7 +1,7 @@
 # [Scriptable.app](https://scriptable.app) scripts
 
 ## Scripts
-* [Import-Script.js](Import-Script/Import-Script.scriptable) - a script to download and import other scripts into your Scriptable library. [Read more](Import-Script).  
+* [Import-Script.js](Import-Script/Import-Script.js) - a script to download and import other scripts into your Scriptable library. [Read more](Import-Script).  
 After you downloaded Import-Script, tap on the **Import** links below to import them into your library.
 
 * [OAuth2](OAuth2) - see [Automators.fm topic](https://talk.automators.fm/t/building-a-general-purpose-oauth-redirect-proxy-for-shortcuts-and-scriptable/4420).
