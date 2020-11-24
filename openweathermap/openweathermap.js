@@ -45,7 +45,7 @@ async function getOpenWeatherData({
   
   
   // validate units
-  if (!(/metric|imperial|standard/.test(opts.metric))) {
+  if (!(/metric|imperial|standard/.test(opts.units))) {
     opts.units = 'metric'
   }
 
