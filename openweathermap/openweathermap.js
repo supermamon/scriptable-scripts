@@ -5,7 +5,7 @@
 /* -----------------------------------------------
 Script      : openweathermap.js
 Author      : dev@supermamon.com
-Version     : 1.0.0
+Version     : 1.1.0
 Description :
   A Scriptable module that encapsulate the 
   One Call API from OpenWeatherMap and additional 
@@ -25,6 +25,9 @@ https://talk.automators.fm/t/widget-examples/7994/412
 https://talk.automators.fm/t/widget-examples/7994/414
 
 Changelog   :
+v1.1.0
+- (new) Add sfsymbol and icon to daily forecast
+- (fix) Does not allow changing units
 v1.0.0
 - Initial release
 ----------------------------------------------- */
@@ -62,6 +65,7 @@ async function getOpenWeatherData({
     }
     opts.lat = loc.latitude
     opts.lon = loc.longitude
+    log(`located lat: ${opts.lat}, lon: ${opts.lon}`)
   }
 
   // ready to fetch the weather data
@@ -203,6 +207,21 @@ async function getOpenWeatherData({
     
     return hourly
   })
+
+  wttr.daily.map( daily => {
+
+    daily.weather[0].sfsymbol = 
+      symbolForCondition(
+        daily.weather[0].id, 
+        false)
+
+      let wicon = daily.weather[0].icon
+      daily.weather[0].icon_url = 
+        `http://openweathermap.org/img/wn/@2x.png${wicon}`
+    
+    return daily
+  })
+
 
   // also return the arguments provided
   wttr.args = opts
