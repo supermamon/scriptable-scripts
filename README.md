@@ -8,7 +8,7 @@ After you downloaded Import-Script, tap on the **Import** links below to import 
 
 ## Utilites
 ---
-* [no-background](no-background) - a module to simulate transparent background for widgets.
+* [no-background](/supermamon/scriptable-no-background) - a module to simulate transparent background for widgets.
 * [openweathermap](openweathermap) - A module to encapsulate OpenWeatherMap's [One Call API](https://openweathermap.org/api/one-call-api) and more
 * [basic-ui](utilities/basic-ui.js) - a helper moduel for user interactions
 * [json-utils](utilities/json-utils.js) - a helper module for reading, storing, and converint JSON.
@@ -59,12 +59,7 @@ Example widget that uses the [openweathermap](openweathermap) module. [Read more
 
 ---
 ### Transparent Widgets
-Example widgets that use the `no-background` module. [Read more](no-background).
-
-* 3-Step Example [Source](no-background/examples/nobg-auto.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/nobg-auto.js)
-* Configurable Widget Template [Source](no-background/examples/nobg-configurable-widget-template.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/nobg-configurable-widget-template.js)
-* Weather Forecast [Source](no-background/examples/weather-widget-414.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/weather-widget-414.js)
-* Semi-Transparent Widget [Source](no-background/semi-transparent.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/no-background/examples/semi-transparent.js)
+Examples of `no-background` can been seen at the [no-background repository](/supermamon/scriptable-no-background).
 
 ![](no-background/preview-sml.jpg)
 
