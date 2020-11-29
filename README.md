@@ -59,7 +59,7 @@ Example widget that uses the [openweathermap](openweathermap) module. [Read more
 
 ---
 ### Transparent Widgets
-Examples of `no-background` can been seen at the [no-background repository](/supermamon/scriptable-no-background).
+Examples of `no-background` can been seen at the [no-background repository](https://github.com/supermamon/scriptable-no-background).
 
 ![](no-background/preview-sml.jpg)
 
