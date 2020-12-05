@@ -8,7 +8,7 @@ After you downloaded Import-Script, tap on the **Import** links below to import 
 
 ## Utilites
 ---
-* [no-background](/supermamon/scriptable-no-background) - a module to simulate transparent background for widgets.
+* [no-background](http://github.com/supermamon/scriptable-no-background) - a module to simulate transparent background for widgets.
 * [openweathermap](openweathermap) - A module to encapsulate OpenWeatherMap's [One Call API](https://openweathermap.org/api/one-call-api) and more
 * [basic-ui](utilities/basic-ui.js) - a helper moduel for user interactions
 * [json-utils](utilities/json-utils.js) - a helper module for reading, storing, and converint JSON.
