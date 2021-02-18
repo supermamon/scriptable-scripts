@@ -46,7 +46,7 @@ Randomly show between the 12 of the most recent post from a user or users.
 
 [Source](ttp://github.com/supermamon/scriptable-instagram-widgets/ig-latest-post.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-instagram-widgets/instagram-widgets/ig-latest-post.js)
 
-![](instagram-widgets/preview-igl.jpg)
+![](https://raw.githubusercontent.com/supermamon/scriptable-instagram-widgets/master/preview-igl.jpg)
 
 ---
 ### Simple Weather Widget
