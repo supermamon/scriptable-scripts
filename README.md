@@ -44,7 +44,7 @@ A widget to show current/random Peanuts™ comic.
 ### Instagram Latest Posts
 Randomly show between the 12 of the most recent post from a user or users.
 
-[Source](https://github.com/supermamon/scriptable-instagram-widgets/blob/master/ig-latest-post.js) | [[Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-instagram-widgets/ig-latest-post.js)
+[Source](https://github.com/supermamon/scriptable-instagram-widgets/blob/master/ig-latest-post.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-instagram-widgets/ig-latest-post.js)
 
 
 ![](https://raw.githubusercontent.com/supermamon/scriptable-instagram-widgets/master/preview-igl.jpg)
