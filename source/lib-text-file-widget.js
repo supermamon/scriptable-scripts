@@ -5,7 +5,7 @@
 /* **********************************************
 Name    : lib-text-file-widget.js
 Author  : @supermamon
-Version : 1.0 
+Version : 1.1.0
 Desc    : A widget to display the contents of a 
           text file. 
 Dependencies :
@@ -13,6 +13,9 @@ Dependencies :
 
 Changelog:
 -------------------------------------------------
+v1.1.0 | 2022-09-16
+* Center text in circular widgets. 
+
 v1.0.0 | 2022-09-16
 * Initial release
 ********************************************** */
@@ -26,7 +29,13 @@ class TextFileWidget extends ListWidget {
     if (config.runsInAccessoryWidget) {
       // override padding when in home screen
       padding = 0
+      if (config.widgetFamily == 'accessoryCircular') {
+        centerContent = true
+        font = Font.headline()
+        this.addAccessoryWidgetBackground = true
+      }
     }
+
 
     this.loading = true
     this.minimumScale = minimumScale
