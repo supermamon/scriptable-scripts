@@ -10,7 +10,7 @@
 
 const { TextFileWidget } = importModule('lib-text-file-widget')
 
-const widget = new TextFileWidget('notes/reminders.txt')
+const widget = new TextFileWidget('notes/notes.txt')
 await widget.waitForLoad()
 
 // custom background and padding
