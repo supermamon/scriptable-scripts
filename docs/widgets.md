@@ -7,7 +7,7 @@
 * [Transparent Widgets](#transparent-widgets)
 * [US Elections Widget](#us-elections-widget)
 * [RoutineHub Profile Widget](#routinehub-profile-widget)
-* 
+* [Text File Widget](#text-file-widget)
 * [ButtonsWidget](#buttons-widget)
 
 ---
