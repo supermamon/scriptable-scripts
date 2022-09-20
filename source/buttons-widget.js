@@ -13,6 +13,9 @@ Changelog:
 -------------------------------------------------
 v1.0.0 | 2022-09-19
 * Initial release
+-------------------------------------------------
+v1.0.1 | 2022-09-20
+* (fix) icons too large on smaller devices
 ********************************************** */
 
 
@@ -111,7 +114,11 @@ class ButtonsWidget extends ListWidget {
       if (!this.cols) {
         this.cols = widgetFamily == 'small' ? (compact ? 3 : 2) : widgetFamily == 'extraLarge' ? (compact ? 12 : 8) : (compact ? 6 : 4)
       }
-      this.iconWidth = compact ? 48 : 64
+
+      const screenSize = Device.screenSize()
+      const iw = Math.floor((screenSize.width - (screenSize.width * 0.17)) / 5.5)
+
+      this.iconWidth = compact ? Math.floor(iw * 0.75) : iw
 
     }
 

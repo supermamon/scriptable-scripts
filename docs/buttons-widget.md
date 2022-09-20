@@ -49,7 +49,7 @@ All options are, well, optional. Defaults defined where needed.
 | `rows`             | See [Grid Sizes](#grid-sizes) |                     | Number of icon rows                                                                               |
 | `cols`             | See [Grid Sizes](#grid-sizes) |                     | Number of icon columns                                                                            | 
 | `emptyIconColor`   | Color.darkGray()              | Color.darkGray()    | Background color of an empty icon                                                                 |
-| `iconWidth`        | 64                            | 48                  | The witdth of each icon. Will be also used as height                                              |
+| `iconWidth`        | _calculated_<sup>2<sup>       | _calculated_        | The width of each icon. Will be also used as height.                                              |
 | `iconCornerRadius` | 18                            | 18                  | Corner radius of each icon. Higher = more circular                                                |
 | `iconColor`        | Color.blue()                  | Color.blue()        | Default icon color for the whole widget                                                           |
 | `iconFontSize`     | 18                            | 10                  | Font size of the initials that appear on the icon when both `symbol` and `icon` are not provided. |
@@ -58,6 +58,7 @@ All options are, well, optional. Defaults defined where needed.
 | `labelColor`       | none                          | none                | Color of the label that appear under the icon                                                     |
 
 <sup>1</sup>While it will increase capacity, labels are not shown on `compact` mode.
+<sup>2</sup>Math.floor((screenSize.width - (screenSize.width * 0.17)) / 5.5)
 
 [[Top]](#buttonswidget)
 
