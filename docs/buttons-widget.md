@@ -4,6 +4,10 @@
 
 A customizable launcher widget.
 
+[Source](../source/buttons-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/buttons-widget.js)
+
+---
+
 * [Syntax](#syntax)
 * [Options](#options)
 * [Grid Sizes](#grid-sizes)
