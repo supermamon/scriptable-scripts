@@ -16,6 +16,10 @@ v1.0.0 | 2022-09-19
 -------------------------------------------------
 v1.0.1 | 2022-09-20
 * (fix) icons too large on smaller devices
+-------------------------------------------------
+v1.0.2 | 2022-09-20
+* (update) simplified icon size formula
+* (fix) removed unwanted code
 ********************************************** */
 
 
@@ -37,7 +41,6 @@ class ButtonsWidget extends ListWidget {
     widgetFamily = config.widgetFamily,
     padding = 3,
 
-
     // grid
     rows,
     cols,
@@ -45,10 +48,10 @@ class ButtonsWidget extends ListWidget {
     // icon
     emptyIconColor = Color.darkGray(),
 
-    iconWidth = 64,
+    iconWidth,
     iconCornerRadius = 18,
     iconColor = Color.blue(),
-    iconFontSize = 18,
+    iconFontSize,
     iconTintColor = Color.white(),
 
     // labels
@@ -69,7 +72,6 @@ class ButtonsWidget extends ListWidget {
 
       rows,
       cols,
-
 
       iconWidth,
       iconCornerRadius,
@@ -104,10 +106,6 @@ class ButtonsWidget extends ListWidget {
       this.addAccessoryWidgetBackground = true
     } else {
 
-      if (widgetFamily == 'extraLarge') {
-        widgetFamily == 'large'
-      }
-
       if (!this.rows) {
         this.rows = widgetFamily == 'extraLarge' ? (compact ? 6 : 4) : widgetFamily == 'large' ? (compact ? 6 : 4) : (compact ? 3 : 2)
       }
@@ -116,8 +114,7 @@ class ButtonsWidget extends ListWidget {
       }
 
       const screenSize = Device.screenSize()
-      const iw = Math.floor((screenSize.width - (screenSize.width * 0.17)) / 5.5)
-
+      const iw = Math.floor(screenSize.width * 0.15)
       this.iconWidth = compact ? Math.floor(iw * 0.75) : iw
 
     }

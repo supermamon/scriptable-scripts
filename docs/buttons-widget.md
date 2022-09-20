@@ -58,7 +58,8 @@ All options are, well, optional. Defaults defined where needed.
 | `labelColor`       | none                          | none                | Color of the label that appear under the icon                                                     |
 
 <sup>1</sup>While it will increase capacity, labels are not shown on `compact` mode.
-<sup>2</sup>Math.floor((screenSize.width - (screenSize.width * 0.17)) / 5.5)
+
+<sup>2</sup>Math.floor(screenSize.width * 0.15). Compact icon is 25% smaller.
 
 [[Top]](#buttonswidget)
 
