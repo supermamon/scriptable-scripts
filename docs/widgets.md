@@ -18,7 +18,7 @@ The _Import_ links uses [Import-Script](../Import-Script/readme.md) to import.
 ## xkcd Widget
 A widget to show current/random xkcd comic.
 
-[Source](source/xkcd.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/xkcd.js) | [Docs](xkcd-widget.md)
+[Source](../source/xkcd.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/xkcd.js) | [Docs](xkcd-widget.md)
 
 ![](img/xkcd-widget-crop.png)
 
