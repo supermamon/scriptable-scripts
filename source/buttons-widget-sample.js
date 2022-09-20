@@ -5,7 +5,7 @@
 /* **********************************************
 Name    : buttons-widget-sample.js
 Author  : @supermamon
-Version : 1.0.0
+Version : 1.0.1
 Desc    : A example widget that uses the 
   button-widget library
 
@@ -15,6 +15,9 @@ Changelog:
 -------------------------------------------------
 v1.0.0 | 2022-09-19
 * Initial release
+-------------------------------------------------
+v1.0.1 | 2022-09-20
+* Fix: incorrect variable name
 ********************************************** */
 
 const { ButtonsWidget } = importModule('buttons-widget')
@@ -68,7 +71,7 @@ if (transparent) {
 Script.setWidget(widget)
 
 if (config.runsInApp) {
-  await w.presentMedium()
+  await widget.presentMedium()
 }
 
 async function getIcon() {
