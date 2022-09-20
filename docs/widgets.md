@@ -16,6 +16,7 @@ The _Import_ links uses [Import-Script](../Import-Script/readme.md) to import.
 ---
 
 ## xkcd Widget
+
 A widget to show current/random xkcd comic.
 
 [Source](../source/xkcd.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/xkcd.js) | [Docs](xkcd-widget.md)
@@ -24,11 +25,12 @@ A widget to show current/random xkcd comic.
 
 --- 
 ### Peanuts Widget
+
 A widget to show current/random Peanuts™ comic.
 
-[Source](peanuts-widget/peanuts-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/peanuts-widget/peanuts-widget.js)
+[Source](../source/peanuts-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/peanuts-widget.js) | [Docs](peanuts-widget.md)
 
-![](../peanuts-widget/preview.jpg)
+![](img/peanuts-widget-crop.png)
 
 ---
 ### Instagram Latest Posts

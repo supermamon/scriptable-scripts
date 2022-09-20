@@ -1,23 +1,32 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: tablets;
+/* **********************************************
+Name    : peanuts-widget.js
+Author  : @supermamon
+Version : 1.0.1
+Desc    : shows a random or today's Peanuts
+  comic strip from www.gocomics.com/peanuts/
 
-// script     : peanuts-widget.js
-// version    : 1.0.0 
-// author     : me@supermamon.com
-// date       : 2020-10-28
-// description: shows a random or today's Peanuts
-//   comic. source from 
-//   https://www.gocomics.com/peanuts/
+Changelog:
+-------------------------------------------------
+v1.0.0 | 2020-10-28
+* Initial release
+-------------------------------------------------
+v1.0.1 | 2022-09-20
+* (fix) regex matching
+* (update) merged no-background option
+* (update) implemented Color.dynamic() for gradient
+********************************************** */
 
-
-const BACKGROUND_DARK_MODE = "system" 
+const BACKGROUND_DARK_MODE = "system"
 // options: "yes", "no", "system"
-const SHOW_TITLE  = true
-const SHOW_DATE   = true
+const TRANSPARENT = false
 
+const SHOW_TITLE = true
+const SHOW_DATE = true
 
-let RANDOM        = false
+let RANDOM = false
 // default is current comic
 // set the Parameter value to "random" in the 
 // Edit Widget screen to use a random comic
@@ -25,31 +34,53 @@ if (args.widgetParameter == 'random') {
   RANDOM = true
 }
 
+
+
 let data = await loadData(RANDOM)
 let widget = await createWidget(data)
 
 if (!config.runsInWidget) {
   await widget.presentMedium()
 } else {
-  Script.setWidget(widget) 
+  Script.setWidget(widget)
 }
 Script.complete()
 // -----------------------------------------------
 async function createWidget(data) {
   const w = new ListWidget();
-  w.setPadding(15,0,15,0)
+  w.setPadding(15, 0, 15, 0)
 
-  let isDarkMode = 
-    BACKGROUND_DARK_MODE=="system" ? 
-    await isUsingDarkAppearance() : 
-    BACKGROUND_DARK_MODE=="yes"
-
-  if (isDarkMode) {
-    w.backgroundGradient = newLinearGradient('#010c1ee6','#001e38b3')
-  } else {
-    w.backgroundGradient = newLinearGradient('#b00a0fe6','#b00a0fb3')
+  let fromLightColor = 'b00a0fe6'
+  let fromDarkColor = '#010c1ee6'
+  let toLightColor = 'b00a0fb3'
+  let toDarkColor = '#010c1ee6'
+  if (BACKGROUND_DARK_MODE == 'no') {
+    fromDarkColor = fromLightColor
+    toDarkColor = fromDarkColor
   }
-  
+  if (BACKGROUND_DARK_MODE == 'yes') {
+    fromLightColor = fromDarkColor
+    toLightColor = toDarkColor
+  }
+
+
+  if (!TRANSPARENT) {
+    let gradient = new LinearGradient()
+    gradient.locations = [0, 1]
+    gradient.colors = [
+      Color.dynamic(new Color(fromLightColor), new Color(fromDarkColor)),
+      Color.dynamic(new Color(toLightColor), new Color(toDarkColor)),
+    ]
+    w.backgroundGradient = gradient
+  } else {
+    const fm = FileManager.iCloud()
+    const nobgscript = fm.joinPath(fm.documentsDirectory(), 'no-background.js')
+    if (fm.fileExists(nobgscript)) {
+      const nobg = importModule('no-background')
+      w.backgroundImage = await nobg.getSliceForWidget('peanuts-widget')
+    }
+  }
+
   w.addSpacer()
 
   if (SHOW_TITLE) {
@@ -74,16 +105,7 @@ async function createWidget(data) {
   w.addSpacer()
   return w
 }
-// -----------------------------------------------
-function newLinearGradient(from, to) {
-  let gradient = new LinearGradient()
-  gradient.locations = [0, 1]
-  gradient.colors = [
-    new Color(from),
-    new Color(to)
-  ]
-  return gradient
-}
+
 // -----------------------------------------------
 async function downloadImage(imgurl) {
   let imgReq = new Request(imgurl)
@@ -97,7 +119,7 @@ async function loadData(random) {
     var start = new Date(1950, 9, 2)
     var end = new Date()
     comicDate = new Date(+start + Math.random() * (end - start));
-  } 
+  }
   log(comicDate)
   var df = new DateFormatter()
   df.dateFormat = 'YYYY/MM/dd'
@@ -105,7 +127,9 @@ async function loadData(random) {
   var url = `https://www.gocomics.com/peanuts/${dfDate}`
   var req = new Request(url)
   var src = await req.loadString()
-  var m = src.match(/og:image"\scontent="([^"]+)/)
+  log(src)
+  var m = src.match(/<picture class="gc-card__image.+?src="([^"]+)/)
+
   var imgUrl = m[1]
   return {
     date: comicDate,
@@ -117,11 +141,4 @@ async function loadData(random) {
 function randomDate(start, end) {
   var date = new Date(+start + Math.random() * (end - start));
   return date;
-}
-// -----------------------------------------------
-async function isUsingDarkAppearance() {
-  const wv = new WebView()
-  let js ="(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)"
-  let r = await wv.evaluateJavaScript(js)
-  return r
 }
