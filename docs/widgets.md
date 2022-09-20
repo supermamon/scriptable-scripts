@@ -10,14 +10,17 @@
 * [Text File Widget](#text-file-widget)
 * [ButtonsWidget](#buttons-widget)
 
+The _Import_ links uses [Import-Script](../Import-Script/readme.md) to import.
+
+
 ---
 
-### xkcd Widget
+## xkcd Widget
 A widget to show current/random xkcd comic.
 
-[Source](xkcd-widget/xkcd.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/xkcd-widget/xkcd.js) 
+[Source](xkcd-widget/xkcd.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/xkcd-widget/xkcd.js) | [Docs](xkcd-widget.md)
 
-![](../xkcd-widget/preview.jpg)
+![](img/xkcd-widget-crop.png)
 
 --- 
 ### Peanuts Widget
@@ -77,7 +80,7 @@ This can be used as a lock screen or a home screen widget.
 
 ### Buttons Widget
 
-A customizable launcher widget.
+A customizable launcher widget. See the [documentation](buttons-widget.md).
 
 ![](img/butons-widget-crop.png)
 
