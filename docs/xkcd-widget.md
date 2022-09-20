@@ -5,7 +5,7 @@
 
 A widget to show current/random xkcd comic.
 
-[Source](source/xkcd.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/xkcd.js) 
+[Source](../source/xkcd.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/xkcd.js) 
 
 ---
 
