@@ -13,4 +13,4 @@ After you downloaded Import-Script, tap on the **Import** links below to import 
 * [openweathermap](openweathermap) - A module to encapsulate OpenWeatherMap's [One Call API](https://openweathermap.org/api/one-call-api) and more
 * [basic-ui](utilities/basic-ui.js) - a helper moduel for user interactions
 * [json-utils](utilities/json-utils.js) - a helper module for reading, storing, and converting JSON.
-* Widgets - See [widgets](docs/widgets.md)
+* [Widgets](docs/widgets.md)
