@@ -20,6 +20,10 @@ v1.0.1 | 2022-09-20
 v1.0.2 | 2022-09-20
 * (update) simplified icon size formula
 * (fix) removed unwanted code
+-------------------------------------------------h
+v1.0.3 | 2022-09-20
+* (fix) custom iconWidth not being applied
+* (temp-fix) icons too large on iPad.
 ********************************************** */
 
 
@@ -114,8 +118,16 @@ class ButtonsWidget extends ListWidget {
       }
 
       const screenSize = Device.screenSize()
-      const iw = Math.floor(screenSize.width * 0.15)
-      this.iconWidth = compact ? Math.floor(iw * 0.75) : iw
+
+      const reference = screenSize.width > screenSize.height ? screenSize.height : screenSize.width
+      //const reference = screenSize.width
+
+      if (!this.iconWidth) {
+        // must find calculation for iPad
+        const iw = Device.isPad() ? 56 : Math.floor(reference * 0.15)
+        this.iconWidth = compact ? Math.floor(iw * 0.75) : iw
+        //log(`iconWidth = ${this.iconWidth}`)
+      }
 
     }
 

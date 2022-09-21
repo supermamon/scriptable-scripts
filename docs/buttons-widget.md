@@ -59,7 +59,7 @@ All options are, well, optional. Defaults defined where needed.
 
 <sup>1</sup>While it will increase capacity, labels are not shown on `compact` mode.
 
-<sup>2</sup>Math.floor(screenSize.width * 0.15). Compact icon is 25% smaller.
+<sup>2</sup>Math.floor(screenSize.width * 0.15). Compact icon is 25% smaller. On the iPad, it's set to arbitrary 56. Still figuring out the right calculation.
 
 [[Top]](#buttonswidget)
 
