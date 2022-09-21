@@ -1,11 +1,11 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: blue; icon-glyph: sun;
+// icon-color: purple; icon-glyph: sun;
 
 /* -----------------------------------------------
 Script      : openweathermap.js
 Author      : dev@supermamon.com
-Version     : 1.1.0
+Version     : 1.2.0
 Description :
   A Scriptable module that encapsulate the 
   One Call API from OpenWeatherMap and additional 
@@ -25,28 +25,43 @@ https://talk.automators.fm/t/widget-examples/7994/412
 https://talk.automators.fm/t/widget-examples/7994/414
 
 Changelog   :
+v1.0.0
+- Initial release
+-------------------------------------------------
 v1.1.0
 - (new) Add sfsymbol and icon to daily forecast
 - (fix) Does not allow changing units
-v1.0.0
-- Initial release
+-------------------------------------------------
+v1.2.0 | 20 Sep 2022
+- (fix) lang option does not do anything
+- (fix) night detection is incorrect sometimes
+- (fix) minutely forecast not being excluded
+- (fix) error when hourly or daily is excluded
+- (new) api_version parameter
 ----------------------------------------------- */
 
-
-//------------------------------------------------
 async function getOpenWeatherData({
-                  appid='',
-                  units='metric',
-                  lang='en',
-                  exclude='minutely,alerts',
-                  revgeocode=false,
-                  ...more
-                }) {
+  appid = '',
+  api_version = '2.5',
+  units = 'metric',
+  lang = 'en',
+  exclude = 'minutely,alerts',
+  revgeocode = false,
+  lat,
+  lon,
+  location_name,
+} = {}) {
 
+  // auto-exclude minutely and alerts
+  if (!exclude.includes('minutely')) {
+    exclude = `${exclude},minutely`
+  }
+  if (!exclude.includes('alerts')) {
+    exclude = `${exclude},alerts`
+  }
 
-  var opts = {appid, units, lang, exclude, revgeocode, ...more}                  
-  
-  
+  const opts = { appid, api_version, units, lang, exclude, revgeocode, lat, lon, location_name }
+
   // validate units
   if (!(/metric|imperial|standard/.test(opts.units))) {
     opts.units = 'metric'
@@ -55,11 +70,11 @@ async function getOpenWeatherData({
   // if coordinates are not provided, attempt to
   // automatically find them
   if (!opts.lat || !opts.lon) {
-    log('cordinates not provided. detecting...')
+    log('coordinates not provided. detecting...')
     try {
       var loc = await Location.current()
       log('successfully detected')
-    } catch(e) {
+    } catch (e) {
       log('unable to detect')
       throw new Error('Unable to find your location.')
     }
@@ -69,17 +84,15 @@ async function getOpenWeatherData({
   }
 
   // ready to fetch the weather data
-  let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${opts.lat}&lon=${opts.lon}&exclude=${opts.exclude}&units=${opts.units}&lang${opts.lat}&appid=${opts.appid}`
+  let url = `https://api.openweathermap.org/data/${opts.api_version}/onecall?lat=${opts.lat}&lon=${opts.lon}&exclude=${opts.exclude}&units=${opts.units}&lang=${opts.lang}&appid=${opts.appid}`
   let req = new Request(url)
   let wttr = await req.loadJSON()
   if (wttr.cod) {
     throw new Error(wttr.message)
   }
-  
-  // add some information not provided by OWM
-  wttr.tempUnit = opts.units == 'metric' ?
-                           'C' : 'F'
 
+  // add some information not provided by OWM
+  // UNITS
   const currUnits = {
     standard: {
       temp: "K",
@@ -88,8 +101,8 @@ async function getOpenWeatherData({
       wind_speed: "m/s",
       wind_gust: "m/s",
       rain: "mm",
-      snow: "mm"      
-    } ,
+      snow: "mm"
+    },
     metric: {
       temp: "C",
       pressure: "hPa",
@@ -97,7 +110,7 @@ async function getOpenWeatherData({
       wind_speed: "m/s",
       wind_gust: "m/s",
       rain: "mm",
-      snow: "mm"      
+      snow: "mm"
     },
     imperial: {
       temp: "F",
@@ -106,50 +119,52 @@ async function getOpenWeatherData({
       wind_speed: "mi/h",
       wind_gust: "mi/h",
       rain: "mm",
-      snow: "mm"      
+      snow: "mm"
     }
   }
-
   wttr.units = currUnits[opts.units]
 
+  // Reverse Geocoding
   if (opts.revgeocode) {
     log('reverse geocoding...')
-    var geo = await Location.reverseGeocode(opts.lat, opts.lon)
+    const geo = await Location.reverseGeocode(opts.lat, opts.lon)
     if (geo.length) {
       wttr.geo = geo[0]
     }
   }
 
+  // Night Detections, Weather Symbols and Icons
+
   //----------------------------------------------
   // SFSymbol function
   // Credits to @eqsOne | https://talk.automators.fm/t/widget-examples/7994/414
   // Reference: https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
-  const symbolForCondition = function(cond,night=false){
+  const symbolForCondition = function (cond, night = false) {
     let symbols = {
-    // Thunderstorm
-      "2": function(){
+      // Thunderstorm
+      "2": function () {
         return "cloud.bolt.rain.fill"
       },
-    // Drizzle
-      "3": function(){
+      // Drizzle
+      "3": function () {
         return "cloud.drizzle.fill"
       },
-    // Rain
-      "5": function(){
+      // Rain
+      "5": function () {
         return (cond == 511) ? "cloud.sleet.fill" : "cloud.rain.fill"
       },
-    // Snow
-      "6": function(){
+      // Snow
+      "6": function () {
         return (cond >= 611 && cond <= 613) ? "cloud.snow.fill" : "snow"
       },
-    // Atmosphere
-      "7": function(){
+      // Atmosphere
+      "7": function () {
         if (cond == 781) { return "tornado" }
         if (cond == 701 || cond == 741) { return "cloud.fog.fill" }
         return night ? "cloud.fog.fill" : "sun.haze.fill"
       },
-    // Clear and clouds
-      "8": function(){
+      // Clear and clouds
+      "8": function () {
         if (cond == 800) { return night ? "moon.stars.fill" : "sun.max.fill" }
         if (cond == 802 || cond == 803) { return night ? "cloud.moon.fill" : "cloud.sun.fill" }
         return "cloud.fill"
@@ -158,69 +173,80 @@ async function getOpenWeatherData({
     // Get first condition digit.
     let conditionDigit = Math.floor(cond / 100)
     return symbols[conditionDigit]()
-    
+
   }
 
   // find the day that matched the epoch `dt`
-  var findDay = function(dt) {
-    return wttr.daily.filter( daily => {
-      var hDate = new Date( 1000 * dt )
-      var dDate = new Date( 1000 * daily.dt )
+  const findDay = function (dt) {
+    const hDate = new Date(1000 * (dt))
+
+    const tzOffset = (new Date()).getTimezoneOffset() * 60
+    const match = wttr.daily.filter(daily => {
+      // somehow the daily timestamps are at UTC but inputs are local
+      // just trying this out if it works long term
+      const dDate = new Date(1000 * (daily.dt + tzOffset))
+
       return (
-        hDate.getYear() == dDate.getYear() && 
-        hDate.getMonth() == dDate.getMonth() &&  
+        hDate.getYear() == dDate.getYear() &&
+        hDate.getMonth() == dDate.getMonth() &&
         hDate.getDate() == dDate.getDate())
     })[0]
+    return match
   }
-  
-  // tell whether it's night or day
-  var day = findDay(wttr.current.dt)
-  
-  wttr.current.is_night = (
-    wttr.current.dt > day.sunset || 
-    wttr.current.dt < day.sunrise)
 
-    wttr.current.weather[0].sfsymbol = 
+  wttr.current.is_night = (
+    wttr.current.dt > (wttr.current.sunset) ||
+    wttr.current.dt < (wttr.current.sunrise))
+
+  wttr.current.weather[0].sfsymbol =
     symbolForCondition(
       wttr.current.weather[0].id,
       wttr.current.is_night)
 
-    let wicon = wttr.current.weather[0].icon
-    wttr.current.weather[0].icon_url = 
-      `http://openweathermap.org/img/wn/@2x.png${wicon}`
+  let wicon = wttr.current.weather[0].icon
+  wttr.current.weather[0].icon_url =
+    `http://openweathermap.org/img/wn/@2x.png${wicon}`
 
-  wttr.hourly.map( hourly => {
+  // hourly data
+  if (wttr.hourly) {
+    wttr.hourly.map(hourly => {
 
-    var day = findDay(hourly.dt)
-    hourly.is_night  = (
-      hourly.dt > day.sunset || 
-      hourly.dt < day.sunrise)
+      var day = findDay(hourly.dt)
+      hourly.is_night = (
+        hourly.dt > day.sunset ||
+        hourly.dt < day.sunrise)
 
-    hourly.weather[0].sfsymbol = 
-      symbolForCondition(
-        hourly.weather[0].id, 
-        hourly.is_night)
+      hourly.weather[0].sfsymbol =
+        symbolForCondition(
+          hourly.weather[0].id,
+          hourly.is_night)
 
       let wicon = hourly.weather[0].icon
-      hourly.weather[0].icon_url = 
+      hourly.weather[0].icon_url =
         `http://openweathermap.org/img/wn/@2x.png${wicon}`
-    
-    return hourly
-  })
 
-  wttr.daily.map( daily => {
+      return hourly
+    })
+  }
 
-    daily.weather[0].sfsymbol = 
-      symbolForCondition(
-        daily.weather[0].id, 
-        false)
+  if (wttr.daily) {
+    wttr.daily.map(daily => {
+
+      daily.weather[0].sfsymbol =
+        symbolForCondition(
+          daily.weather[0].id,
+          false)
 
       let wicon = daily.weather[0].icon
-      daily.weather[0].icon_url = 
+      daily.weather[0].icon_url =
         `http://openweathermap.org/img/wn/@2x.png${wicon}`
-    
-    return daily
-  })
+
+      return daily
+    })
+  }
+
+
+
 
 
   // also return the arguments provided

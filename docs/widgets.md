@@ -44,11 +44,11 @@ A widget to show current/random Peanuts™ comic.
 ---
 ### Simple Weather Widget
 
-Example widget that uses the [openweathermap](openweathermap) module. [Read more](openweathermap).
+Example widget that uses the [openweathermap](openweathermap.md) module. 
 
-[Source](../openweathermap/simple-weather-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/openweathermap/simple-weather-widget.js)
+[Source](../source/simple-weather-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/simple-weather-widget.js) | [Docs](openweathermap.md) 
 
-![](../openweathermap/preview-sml.jpg)
+![](img/simple-weather-crop.png)
 
 [[top]](#widgets)
 
