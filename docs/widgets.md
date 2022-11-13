@@ -70,7 +70,7 @@ A widget to show the current shortcuts and download counts of a [routinehub.co](
 Display the contents of a text file on a widget. Works best for short texts but also flexible to allow displaying longer text files. 
 This can be used as a lock screen or a home screen widget.
 
-[Source](../source/lib-text-file-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/lib-text-file-widget.js)
+[Source](../source/lib-text-file-widget.js) | [Import](https://open.scriptable.app/run/Import-Script?url=https://github.com/supermamon/scriptable-scripts/source/lib-text-file-widget.js) | [Docs](text-file-widget.md)
 
 ![three-way screenshot of widget](img/text-file-widget-crop.png)
 
